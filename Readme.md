@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анастасия Ничипорчук](https://up.htmlacademy.ru/javascript/14/user/612797).
-* Наставник: [Сергей Буртылёв] (https://htmlacademy.ru/profile/id3341).
+* Наставник: [Сергей Буртылёв](https://htmlacademy.ru/profile/id3341).
 
 ---
 
