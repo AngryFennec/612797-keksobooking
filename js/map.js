@@ -22,24 +22,24 @@ function getRandomArray(array) {}
 function getShuffledArray(array) {}
 
 var advert = {
-  'author': {
-    'avatar': 'img/avatars/user' + getNonrepeatElement() + '.png'
+  author: {
+    avatar: 'img/avatars/user' + getNonrepeatElement() + '.png'
   },
-  'offer': {
-    'title': getNonrepeatElement(TITLES),
-    'address': getRandomInt(300, 900) + ' ' + getRandomInt(130, 630),
-    'price': getRandomInt(1000, 1000000),
-    'type': getRandomArrayElement(TYPES),
-    'rooms': getRandomInt(1, 5),
-    'guests': getRandomInt(1, 99),
-    'checkin': getRandomArrayElement(TIMES),
-    'checkout': getRandomArrayElement(TIMES),
-    'features': getRandomArray(FEATURE_STRING),
-    'description': '',
-    'photos': getShuffledArray(PHOTO_STRING)
+  offer: {
+    title: getNonrepeatElement(TITLES),
+    address: this.location.x + ' ' + this.location.y,
+    price: getRandomInt(1000, 1000000),
+    type: getRandomArrayElement(TYPES),
+    rooms: getRandomInt(1, 5),
+    guests: getRandomInt(1, 99),
+    checkin: getRandomArrayElement(TIMES),
+    checkout: getRandomArrayElement(TIMES),
+    features: getRandomArray(FEATURE_STRING),
+    description: '',
+    photos: getShuffledArray(PHOTO_STRING)
   },
-  'location': {
-    'x': getRandomInt(300, 900),
-    'y': getRandomInt(130, 630)
+  location: {
+    x: getRandomInt(300, 900),
+    y: getRandomInt(130, 630)
   }
 };
