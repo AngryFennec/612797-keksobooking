@@ -6,6 +6,8 @@ var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURE_STRING = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTO_STRING = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var shuffledTitles = getShuffledArray(TITLES);
+var shuffledAvatars = createAvatarsArray();
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max + 1 - min)) + min;
@@ -36,10 +38,10 @@ function getNonrepeatElement(shuffledArray, index) {
 
 function getRandomArray(array) {
   var newLength = getRandomInt(0, array.length);
-  console.log(newLength);
+  var tempArray = getShuffledArray(array);
   var newArray = [];
   for (var i = 0; i < newLength; i++) {
-    newArray.push(getRandomArrayElement(array));
+    newArray.push(tempArray[i]);
   }
   return newArray;
 }
@@ -53,21 +55,24 @@ function getShuffledArray(array) {
 }
 
 function createAvatarsArray() {
-  newArray = [];
+  var newArray = [];
   for (var i = 0; i < TOTAL; i++) {
     newArray.push(i);
   }
   return getShuffledArray(newArray);
 }
-function createAdvert(avatarNumber,  titleString) {
+
+function createAdvert() {
+var randomX = getRandomInt(300, 900);
+var randomY = getRandomInt(130, 630);
 
   var advert = {
     author: {
-      avatar: 'img/avatars/user0' + avatarNumber + '.png'
+      avatar: 'img/avatars/user0' + shuffledAvatars[0] + '.png'
     },
     offer: {
-      title: titleString,
-      address: this.location.x + ' ' + this.location.y,
+      title: shuffledTitles[0],
+      address: randomX + ' ' + randomY,
       price: getRandomInt(1000, 1000000),
       type: getRandomArrayElement(TYPES),
       rooms: getRandomInt(1, 5),
@@ -79,8 +84,8 @@ function createAdvert(avatarNumber,  titleString) {
       photos: getShuffledArray(PHOTO_STRING)
     },
     location: {
-      x: getRandomInt(300, 900),
-      y: getRandomInt(130, 630)
+      x: randomX,
+      y: randomY
     }
   };
   return advert;
@@ -88,14 +93,10 @@ function createAdvert(avatarNumber,  titleString) {
 
 function createAdvertArray() {
   var newArray = [];
-  var avatarArray = createAvatarsArray();
-  
   for (var i = 0; i < TOTAL; i++) {
-    newArray.push(createAdvert())
+    newArray.push(createAdvert());
+    shuffledTitles.splice(0, 1);
+    shuffledAvatars.splice(0, 1);
   }
+  return newArray;
 }
-console.log(FEATURE_STRING);
-console.log(getRandomArrayElement(FEATURE_STRING));
-console.log(copyPrimitiveArray(FEATURE_STRING));
-console.log(getRandomArray(FEATURE_STRING));
-console.log(getShuffledArray(FEATURE_STRING));
