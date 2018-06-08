@@ -6,6 +6,8 @@ var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURE_STRING = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTO_STRING = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 var shuffledTitles = getShuffledArray(TITLES);
 var shuffledAvatars = createAvatarsArray();
 
@@ -57,7 +59,7 @@ function getShuffledArray(array) {
 function createAvatarsArray() {
   var newArray = [];
   for (var i = 0; i < TOTAL; i++) {
-    newArray.push(i);
+    newArray.push(i+1);
   }
   return getShuffledArray(newArray);
 }
@@ -100,3 +102,37 @@ function createAdvertArray() {
   }
   return newArray;
 }
+
+function createPin(advertElement) {
+  var pinElement = pinTemplate.cloneNode(true);
+  var coordX = advertElement.location.x - PIN_WIDTH/2;
+  var coordY = advertElement.location.y - PIN_HEIGHT;
+  pinElement.style = 'left: '+ coordX + 'px; top: ' + coordY + 'px;';
+  pinElement.querySelector('img').src = advertElement.author.avatar;
+  pinElement.querySelector('img').alt = advertElement.offer.title;
+  return pinElement;
+}
+
+function createPinList(advertArray) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < advertArray.length; i++) {
+    fragment.appendChild(createPin(advertArray[i]));
+  }
+  return fragment;
+}
+
+function addPinsToPage(fragment) {
+  pinList.appendChild(fragment);
+}
+
+var adverts = createAdvertArray();
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
+var advertTemplate = document.querySelector('template')
+    .content
+    .querySelector('.map__card');
+var pinTemplate = document.querySelector('template')
+    .content
+    .querySelector('.map__pin');
+var pinList = document.querySelector('.map__pins');
+addPinsToPage(createPinList(adverts));
