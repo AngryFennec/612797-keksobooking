@@ -1,11 +1,40 @@
 'use strict';
 
 var TOTAL = 8;
-var TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var TYPES = ['palace', 'flat', 'house', 'bungalo'];
-var TIMES = ['12:00', '13:00', '14:00'];
-var FEATURE_STRING = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var PHOTO_STRING = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var TITLES = [
+  'Большая уютная квартира',
+  'Маленькая неуютная квартира',
+  'Огромный прекрасный дворец',
+  'Маленький ужасный дворец',
+  'Красивый гостевой домик',
+  'Некрасивый негостеприимный домик',
+  'Уютное бунгало далеко от моря',
+  'Неуютное бунгало по колено в воде'
+];
+var TYPES = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
+var TIMES = [
+  '12:00',
+  '13:00',
+  '14:00'
+];
+var FEATURES = [
+  'wifi',
+  'dishwasher',
+  'parking',
+  'washer',
+  'elevator',
+  'conditioner'
+];
+var PHOTOS = [
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+];
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var shuffledTitles = getShuffledArray(TITLES);
@@ -25,6 +54,16 @@ function getRandomInt(min, max) {
 function getRandomArrayElement(array) {
   var max = array.length - 1;
   return array[getRandomInt(0, max)];
+}
+
+function getObjectKeysArrray(object) {
+  var newArray = [];
+  for (var key in object) {
+    if ({}.hasOwnProperty.call(object, key)) {
+      newArray.push(key);
+    }
+  }
+  return newArray;
 }
 
 function swapElements(array, i, j) {
@@ -76,14 +115,14 @@ function createAdvert() {
       title: shuffledTitles[0],
       address: randomX + ' ' + randomY,
       price: getRandomInt(1000, 1000000),
-      type: getRandomArrayElement(TYPES),
+      type: getRandomArrayElement(getObjectKeysArrray(TYPES)),
       rooms: getRandomInt(1, 5),
       guests: getRandomInt(1, 99),
       checkin: getRandomArrayElement(TIMES),
       checkout: getRandomArrayElement(TIMES),
-      features: getRandomArray(FEATURE_STRING),
+      features: getRandomArray(FEATURES),
       description: '',
-      photos: getShuffledArray(PHOTO_STRING)
+      photos: getShuffledArray(PHOTOS)
     },
     location: {
       x: randomX,
@@ -103,20 +142,20 @@ function createAdvertArray() {
   return newArray;
 }
 
-function createPin(advertElement) {
-  var pinElement = pinTemplate.cloneNode(true);
+function createDOMPin(advertElement) {
+  var domPin = pinTemplate.cloneNode(true);
   var coordX = advertElement.location.x - PIN_WIDTH / 2;
   var coordY = advertElement.location.y - PIN_HEIGHT;
-  pinElement.style = 'left: ' + coordX + 'px; top: ' + coordY + 'px;';
-  pinElement.querySelector('img').src = advertElement.author.avatar;
-  pinElement.querySelector('img').alt = advertElement.offer.title;
-  return pinElement;
+  domPin.style = 'left: ' + coordX + 'px; top: ' + coordY + 'px;';
+  domPin.querySelector('img').src = advertElement.author.avatar;
+  domPin.querySelector('img').alt = advertElement.offer.title;
+  return domPin;
 }
 
-function createPinList(advertArray) {
+function createDOMPinList(advertArray) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < advertArray.length; i++) {
-    fragment.appendChild(createPin(advertArray[i]));
+    fragment.appendChild(createDOMPin(advertArray[i]));
   }
   return fragment;
 }
@@ -126,56 +165,31 @@ function addPinsToPage(fragment) {
 }
 
 function getStringByType(type) {
-  var s = '';
-  switch (type) {
-    case 'flat': {
-      s = 'Квартира';
-      break;
-    }
-    case 'bungalo': {
-      s = 'Бунгало';
-      break;
-    }
-    case 'house': {
-      s = 'Дом';
-      break;
-    }
-    case 'palace': {
-      s = 'Дворец';
-      break;
-    }
-    default: {
-      s = 'Просто жилье';
-      break;
-    }
-  }
-  return s;
+  return TYPES[type];
 }
 
-function createPhotoDOM(photoContainer, photoArray) {
-  var photo = photoContainer.querySelector('.popup__photo');
+function createDOMPhotos(domPhotos, photoArray) {
+  var photo = domPhotos.querySelector('.popup__photo');
   photo.src = photoArray[0];
-  photoContainer.appendChild(photo);
+  domPhotos.appendChild(photo);
   for (var i = 1; i < photoArray.length; i++) {
     var newPhoto = photo.cloneNode(true);
     newPhoto.src = photoArray[i];
-    photoContainer.appendChild(newPhoto);
+    domPhotos.appendChild(newPhoto);
   }
 }
 function clearChildren(parent) {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
+  parent.innerHTML = '';
 }
 
-function createFeaturesDOM(ulDOM, featuresArray) {
-  clearChildren(ulDOM);
+function createDOMFeatures(domUl, featuresArray) {
+  clearChildren(domUl);
   for (var i = 0; i < featuresArray.length; i++) {
     var li = document.createElement('li');
     li.classList.add('popup__feature');
     var classString = 'popup__feature--' + featuresArray[i];
     li.classList.add(classString);
-    ulDOM.appendChild(li);
+    domUl.appendChild(li);
   }
 }
 
@@ -189,21 +203,15 @@ function createDOMAdvert(advertElement) {
   domAdvert.querySelector('.popup__text--time').textContent = 'Заезд после ' + advertElement.offer.checkin + ', выезд до ' + advertElement.offer.checkout;
   domAdvert.querySelector('.popup__description').textContent = advertElement.offer.description;
   domAdvert.querySelector('.popup__avatar').src = advertElement.author.avatar;
-  createPhotoDOM(domAdvert.querySelector('.popup__photos'), advertElement.offer.photos);
-  createFeaturesDOM(domAdvert.querySelector('.popup__features'), advertElement.offer.features);
+  createDOMPhotos(domAdvert.querySelector('.popup__photos'), advertElement.offer.photos);
+  createDOMFeatures(domAdvert.querySelector('.popup__features'), advertElement.offer.features);
   return domAdvert;
 }
 
-function createAdvertFragment(domAdvert) {
-  var fragment = document.createDocumentFragment();
-  fragment.appendChild(domAdvert);
-  return fragment;
-}
-
-function addAdvertToPage(fragment) {
-  mapBeforePopup.before(fragment);
+function addAdvertToPage(node) {
+  mapBeforePopup.before(node);
 }
 
 map.classList.remove('map--faded');
-addPinsToPage(createPinList(adverts));
-addAdvertToPage(createAdvertFragment(createDOMAdvert(adverts[0])));
+addPinsToPage(createDOMPinList(adverts));
+addAdvertToPage(createDOMAdvert(adverts[0]));
