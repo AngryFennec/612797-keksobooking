@@ -34,10 +34,7 @@ function swapElements(array, i, j) {
 }
 
 function copyPrimitiveArray(array) {
-  var newArray = [];
-  for (var i = 0; i < array.length; i++) {
-    newArray.push(array[i]);
-  }
+  var newArray = array.slice();
   return newArray;
 }
 
