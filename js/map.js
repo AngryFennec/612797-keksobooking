@@ -59,7 +59,7 @@ function getRandomArrayElement(array) {
 function getObjectKeysArrray(object) {
   var newArray = [];
   for (var key in object) {
-    if ({}.hasOwnProperty.call(object, key)) {
+    if (object.hasOwnProperty(key)) {
       newArray.push(key);
     }
   }
