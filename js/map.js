@@ -152,10 +152,18 @@ function createDOMPin(advertElement) {
   return domPin;
 }
 
-function createDOMPinList(advertArray) {
+function createDOMPinsArray(advertsArray) {
+  var newArray = [];
+  for (var i = 0; i< advertsArray.length; i++) {
+    newArray.push(createDOMPin(advertsArray[i]));
+  }
+  return newArray;
+}
+
+function createDOMPinsList(domPins) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < advertArray.length; i++) {
-    fragment.appendChild(createDOMPin(advertArray[i]));
+  for (var i = 0; i < domPins.length; i++) {
+    fragment.appendChild(domPins[i])
   }
   return fragment;
 }
@@ -220,6 +228,7 @@ function addAdvertToPage(node) {
 
 var BIG_PIN_HEIGHT = 40;
 var BIG_PIN_WIDTH = 44;
+var TAIL_HEIGHT = 22;
 var mapPin = document.querySelector('.map__pin--main');
 var mapPinFlag = false; //флаг для фиксации первого перемещения метки
 
@@ -251,24 +260,74 @@ function setPageDisabled() {
 
 function mapPinDragListener() {
   if (!mapPinFlag) {
-    setPageEnabled()
+    setPageEnabled();
+    setAddressFromPin(TAIL_HEIGHT + BIG_PIN_HEIGHT / 2);
+    addPinsToPage(createDOMPinsList(domPinsArray));
+    setPinClickHandlers();
   }
-  console.log(mapPin.getBoundingClientRect());
 }
 
 function removePixels(value) {
   return Number(value.substr(0, value.length-2));
 }
 
-function setInitAddress() {
-  var pinX = removePixels(mapPin.style.left) + BIG_PIN_WIDTH / 2;
-  var pinY = removePixels(mapPin.style.top) + BIG_PIN_HEIGHT / 2;
+function getPinCenterXCoord() {
+  return removePixels(mapPin.style.left) +  BIG_PIN_WIDTH / 2;
+}
+
+function getPinCenterYCoord(offset = 0) {
+  return removePixels(mapPin.style.top) + offset + BIG_PIN_HEIGHT / 2;
+}
+
+function setAddressFromPin(offset = 0) {
   var addressField = document.querySelector('input[name="address"]');
+  var pinX = getPinCenterXCoord();
+  var pinY = getPinCenterYCoord(offset);
   addressField.value = pinX + ', ' + pinY;
 }
 
 
+/*
+function findPinByAdvert(advert) {
+  console.log(advert.author.avatar);
+  for (var i = 0; i < domPinsArray.length; i++) {
+    console.log(domPinsArray[i].querySelector('img').src);
+    if (advert.author.avatar === domPinsArray[i].querySelector('img').src) {
 
+      return domPinsArray[i];
+    }
+  }
+}*/
+/*
+function createPinClickHandlersArray() {
+  var pinHandlers = [];
+  for (var i = 0; i < adverts.length; i++) {
+    pinHandlers.push(function() {
+      addAdvertToPage(createDOMAdvert(adverts[i]));
+      }
+    );
+    console.log(adverts[i]);
+  }
+  console.log(pinHandlers);
+  return pinHandlers;
+}*/
+
+function setPinClickHandler(i) {
+  return function() {
+    addAdvertToPage(createDOMAdvert(adverts[i]));
+  };
+}
+
+function setPinClickHandlers() {
+  //console.log(domPinsArray);
+  for (var i = 0; i < domPinsArray.length; i++) {
+    domPinsArray[i].addEventListener('click', setPinClickHandler(i), false);
+  }
+}
+
+
+var domPinsArray = createDOMPinsArray(adverts);
+//var pinHandlersArray = createPinClickHandlersArray();
 setPageDisabled();
-setInitAddress();
+setAddressFromPin();
 mapPin.addEventListener('mouseup', mapPinDragListener);
