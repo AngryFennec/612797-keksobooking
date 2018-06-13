@@ -210,6 +210,13 @@ function createDOMAdvert(advertElement) {
   domAdvert.querySelector('.popup__text--time').textContent = 'Заезд после ' + advertElement.offer.checkin + ', выезд до ' + advertElement.offer.checkout;
   domAdvert.querySelector('.popup__description').textContent = advertElement.offer.description;
   domAdvert.querySelector('.popup__avatar').src = advertElement.author.avatar;
+  domAdvert.querySelector('.popup__close').onclick = popupCloseHandler;
+  document.onkeydown = function (evt) {
+    evt = evt || window.event;
+    if (evt.keyCode === 27) {
+      popupCloseHandler();
+    }
+  };
   createDOMPhotos(domAdvert.querySelector('.popup__photos'), advertElement.offer.photos);
   createDOMFeatures(domAdvert.querySelector('.popup__features'), advertElement.offer.features);
   return domAdvert;
@@ -229,7 +236,9 @@ var BIG_PIN_HEIGHT = 40;
 var BIG_PIN_WIDTH = 44;
 var TAIL_HEIGHT = 22;
 var mapPin = document.querySelector('.map__pin--main');
+var domPinsArray = createDOMPinsArray(adverts);
 var mapPinFlag = false; // флаг для фиксации первого перемещения метки
+var currentAdvert = null;
 
 function setFormDisableFlag(flag) {
   var adForm = document.querySelector('.ad-form');
@@ -293,7 +302,11 @@ function setAddressFromPin(offset) {
 
 function setPinClickHandler(i) {
   return function () {
-    addAdvertToPage(createDOMAdvert(adverts[i]));
+    if (currentAdvert !== null) {
+      popupCloseHandler();
+    }
+    currentAdvert = createDOMAdvert(adverts[i]);
+    addAdvertToPage(currentAdvert);
   };
 }
 
@@ -303,7 +316,11 @@ function setPinClickHandlers() {
   }
 }
 
-var domPinsArray = createDOMPinsArray(adverts);
+function popupCloseHandler() {
+  currentAdvert.remove();
+  currentAdvert = null;
+}
+
 setPageDisabled();
 setAddressFromPin();
 mapPin.addEventListener('mouseup', mapPinDragListener);
