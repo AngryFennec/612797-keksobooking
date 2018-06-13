@@ -212,6 +212,63 @@ function addAdvertToPage(node) {
   mapBeforePopup.before(node);
 }
 
-map.classList.remove('map--faded');
-addPinsToPage(createDOMPinList(adverts));
-addAdvertToPage(createDOMAdvert(adverts[0]));
+//map.classList.remove('map--faded');
+//addPinsToPage(createDOMPinList(adverts));
+//addAdvertToPage(createDOMAdvert(adverts[0]));
+
+/*module4-task1*/
+
+var BIG_PIN_HEIGHT = 40;
+var BIG_PIN_WIDTH = 44;
+var mapPin = document.querySelector('.map__pin--main');
+var mapPinFlag = false; //флаг для фиксации первого перемещения метки
+
+function setFormDisableFlag(flag) {
+  var adForm = document.querySelector('.ad-form');
+  adForm.classList.add('ad-form--disabled');
+  var fieldsetNodeList = adForm.querySelectorAll('fieldset');
+  if (flag === 'true') {
+    for (var i = 0; i < fieldsetNodeList.length; i++) {
+      fieldsetNodeList[i].disabled = true;
+    }
+  }
+  else {
+    for (var i = 0; i < fieldsetNodeList.length; i++) {
+      fieldsetNodeList[i].removeAttribute('disabled');
+    }
+  }
+}
+
+function setPageEnabled() {
+  document.querySelector('.map').classList.remove('map--faded');
+  setFormDisableFlag('false');
+}
+
+function setPageDisabled() {
+  document.querySelector('.map').classList.add('map--faded');
+  setFormDisableFlag('true');
+}
+
+function mapPinDragListener() {
+  if (!mapPinFlag) {
+    setPageEnabled()
+  }
+  console.log(mapPin.getBoundingClientRect());
+}
+
+function removePixels(value) {
+  return Number(value.substr(0, value.length-2));
+}
+
+function setInitAddress() {
+  var pinX = removePixels(mapPin.style.left) + BIG_PIN_WIDTH / 2;
+  var pinY = removePixels(mapPin.style.top) + BIG_PIN_HEIGHT / 2;
+  var addressField = document.querySelector('input[name="address"]');
+  addressField.value = pinX + ', ' + pinY;
+}
+
+
+
+setPageDisabled();
+setInitAddress();
+mapPin.addEventListener('mouseup', mapPinDragListener);
