@@ -41,7 +41,6 @@ var shuffledTitles = getShuffledArray(TITLES);
 var shuffledAvatars = createAvatarsArray();
 
 var adverts = createAdvertArray();
-var map = document.querySelector('.map');
 var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
 var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var pinList = document.querySelector('.map__pins');
@@ -152,10 +151,18 @@ function createDOMPin(advertElement) {
   return domPin;
 }
 
-function createDOMPinList(advertArray) {
+function createDOMPinsArray(advertsArray) {
+  var newArray = [];
+  for (var i = 0; i < advertsArray.length; i++) {
+    newArray.push(createDOMPin(advertsArray[i]));
+  }
+  return newArray;
+}
+
+function createDOMPinsList(domPins) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < advertArray.length; i++) {
-    fragment.appendChild(createDOMPin(advertArray[i]));
+  for (var i = 0; i < domPins.length; i++) {
+    fragment.appendChild(domPins[i]);
   }
   return fragment;
 }
@@ -212,6 +219,112 @@ function addAdvertToPage(node) {
   mapBeforePopup.before(node);
 }
 
-map.classList.remove('map--faded');
-addPinsToPage(createDOMPinList(adverts));
-addAdvertToPage(createDOMAdvert(adverts[0]));
+// map.classList.remove('map--faded');
+// addPinsToPage(createDOMPinList(adverts));
+// addAdvertToPage(createDOMAdvert(adverts[0]));
+
+/* module4-task1 */
+
+var BIG_PIN_HEIGHT = 65;
+var BIG_PIN_WIDTH = 65;
+var TAIL_HEIGHT = 22;
+var mapPin = document.querySelector('.map__pin--main');
+var map = document.querySelector('.map');
+var domPinsArray = createDOMPinsArray(adverts);
+var addressField = document.querySelector('input[name="address"]');
+var adForm = document.querySelector('.ad-form');
+var fieldsetNodeList = adForm.querySelectorAll('fieldset');
+var currentPopup = null;
+
+function setFormDisabled() {
+  adForm.classList.add('ad-form--disabled');
+  for (var i = 0; i < fieldsetNodeList.length; i++) {
+    fieldsetNodeList[i].disabled = true;
+  }
+}
+function setFormEnabled() {
+  adForm.classList.remove('ad-form--disabled');
+  for (var j = 0; j < fieldsetNodeList.length; j++) {
+    fieldsetNodeList[j].removeAttribute('disabled');
+  }
+}
+
+function isMapActive() {
+  return !(map.classList.contains('map--faded'));
+}
+
+function setPageEnabled() {
+  map.classList.remove('map--faded');
+  setFormEnabled();
+}
+
+function setPageDisabled() {
+  map.classList.add('map--faded');
+  setFormDisabled();
+}
+
+function mapPinMouseupHandler() {
+  if (!isMapActive()) {
+    setPageEnabled();
+    setAddressFromPin(TAIL_HEIGHT + BIG_PIN_HEIGHT / 2);
+    addPinsToPage(createDOMPinsList(domPinsArray));
+    setPinClickHandlers();
+  }
+}
+
+function calculateAddress() {
+  var pinX = parseInt(mapPin.style.left, 10) + BIG_PIN_WIDTH / 2;
+  var pinY = parseInt(mapPin.style.top, 10) + BIG_PIN_HEIGHT / 2;
+  if (isMapActive()) {
+    pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
+  }
+  return pinX + ', ' + pinY;
+}
+
+function setAddressFromPin() {
+  addressField.value = calculateAddress();
+}
+
+function setPinClickHandler(advert) {
+  return function () {
+    if (currentPopup !== null) {
+      closeCurrentPopup();
+    }
+    currentPopup = createDOMAdvert(advert);
+    setPopupCloseHandler(currentPopup);
+    addAdvertToPage(currentPopup);
+  };
+}
+
+function setPinClickHandlers() {
+  for (var i = 0; i < domPinsArray.length; i++) {
+    domPinsArray[i].addEventListener('click', setPinClickHandler(adverts[i]), false);
+  }
+}
+
+function closeCurrentPopup() {
+  currentPopup.remove();
+  currentPopup = null;
+}
+
+function onCloseBtnPressHandler() {
+  closeCurrentPopup();
+  document.removeEventListener('keypress', onKeyEscPressHandler);
+}
+
+function onKeyEscPressHandler(event) {
+  if (event.keyCode === 27) {
+    closeCurrentPopup();
+    document.removeEventListener('keypress', onKeyEscPressHandler);
+  }
+}
+
+function setPopupCloseHandler(popup) {
+  popup.querySelector('.popup__close').addEventListener('click', onCloseBtnPressHandler);
+  document.addEventListener('keypress', onKeyEscPressHandler);
+}
+
+
+setPageDisabled();
+setAddressFromPin();
+mapPin.addEventListener('mouseup', mapPinMouseupHandler);
