@@ -232,8 +232,8 @@ function addAdvertToPage(node) {
 
 /* module4-task1 */
 
-var BIG_PIN_HEIGHT = 40;
-var BIG_PIN_WIDTH = 44;
+var BIG_PIN_HEIGHT = 65;
+var BIG_PIN_WIDTH = 65;
 var TAIL_HEIGHT = 22;
 var mapPin = document.querySelector('.map__pin--main');
 var domPinsArray = createDOMPinsArray(adverts);
