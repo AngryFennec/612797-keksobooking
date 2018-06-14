@@ -214,7 +214,7 @@ function createDOMAdvert(advertElement) {
   document.onkeydown = function (evt) {
     evt = evt || window.event;
     if (evt.keyCode === 27) {
-      popupCloseHandler();
+      closePopup();
     }
   };
   createDOMPhotos(domAdvert.querySelector('.popup__photos'), advertElement.offer.photos);
@@ -236,38 +236,42 @@ var BIG_PIN_HEIGHT = 65;
 var BIG_PIN_WIDTH = 65;
 var TAIL_HEIGHT = 22;
 var mapPin = document.querySelector('.map__pin--main');
+var map = document.querySelector('.map');
 var domPinsArray = createDOMPinsArray(adverts);
-var mapPinFlag = false; // флаг для фиксации первого перемещения метки
+var addressField = document.querySelector('input[name="address"]');
+var adForm = document.querySelector('.ad-form');
+var fieldsetNodeList = adForm.querySelectorAll('fieldset');
 var currentAdvert = null;
 
 function setFormDisableFlag(flag) {
-  var adForm = document.querySelector('.ad-form');
-  var fieldsetNodeList = adForm.querySelectorAll('fieldset');
-  if (flag === 'true') {
+  if (flag) {
     adForm.classList.add('ad-form--disabled');
     for (var i = 0; i < fieldsetNodeList.length; i++) {
       fieldsetNodeList[i].disabled = true;
     }
   } else {
     adForm.classList.remove('ad-form--disabled');
-    for (i = 0; i < fieldsetNodeList.length; i++) {
-      fieldsetNodeList[i].removeAttribute('disabled');
+    for (var j = 0; j < fieldsetNodeList.length; j++) {
+      fieldsetNodeList[j].removeAttribute('disabled');
     }
   }
 }
+function isMapActive() {
+  return !(map.classList.contains('map--faded'));
+}
 
 function setPageEnabled() {
-  document.querySelector('.map').classList.remove('map--faded');
-  setFormDisableFlag('false');
+  map.classList.remove('map--faded');
+  setFormDisableFlag(false);
 }
 
 function setPageDisabled() {
-  document.querySelector('.map').classList.add('map--faded');
-  setFormDisableFlag('true');
+  map.classList.add('map--faded');
+  setFormDisableFlag(true);
 }
 
-function mapPinDragListener() {
-  if (!mapPinFlag) {
+function mapPinMouseupHandler() {
+  if (!isMapActive()) {
     setPageEnabled();
     setAddressFromPin(TAIL_HEIGHT + BIG_PIN_HEIGHT / 2);
     addPinsToPage(createDOMPinsList(domPinsArray));
@@ -275,52 +279,44 @@ function mapPinDragListener() {
   }
 }
 
-function removePixels(value) {
-  return Number(value.substr(0, value.length - 2));
-}
-
-function getPinCenterXCoord() {
-  return removePixels(mapPin.style.left) + BIG_PIN_WIDTH / 2;
-}
-
-function getPinCenterYCoord(offset) {
-  if (offset === undefined) {
-    offset = 0;
+function calculateAddress() {
+  var pinX = parseInt(mapPin.style.left, 10) + BIG_PIN_WIDTH / 2;
+  var pinY = parseInt(mapPin.style.top, 10) + BIG_PIN_HEIGHT / 2;
+  if (isMapActive()) {
+    pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
   }
-  return removePixels(mapPin.style.top) + offset + BIG_PIN_HEIGHT / 2;
+  return pinX + ', ' + pinY;
 }
 
-function setAddressFromPin(offset) {
-  if (offset === undefined) {
-    offset = 0;
-  }
-  var addressField = document.querySelector('input[name="address"]');
-  var pinX = getPinCenterXCoord();
-  var pinY = getPinCenterYCoord(offset);
-  addressField.value = pinX + ', ' + pinY;
+function setAddressFromPin() {
+  addressField.value = calculateAddress();
 }
 
-function setPinClickHandler(i) {
+function setPinClickHandler(advert) {
   return function () {
     if (currentAdvert !== null) {
-      popupCloseHandler();
+      closePopup();
     }
-    currentAdvert = createDOMAdvert(adverts[i]);
+    currentAdvert = createDOMAdvert(advert);
     addAdvertToPage(currentAdvert);
   };
 }
 
 function setPinClickHandlers() {
   for (var i = 0; i < domPinsArray.length; i++) {
-    domPinsArray[i].addEventListener('click', setPinClickHandler(i), false);
+    domPinsArray[i].addEventListener('click', setPinClickHandler(adverts[i]), false);
   }
 }
 
-function popupCloseHandler() {
+function closePopup() {
   currentAdvert.remove();
   currentAdvert = null;
 }
 
+function popupCloseHandler() {
+  closePopup();
+}
+
 setPageDisabled();
 setAddressFromPin();
-mapPin.addEventListener('mouseup', mapPinDragListener);
+mapPin.addEventListener('mouseup', mapPinMouseupHandler);
