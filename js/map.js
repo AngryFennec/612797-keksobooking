@@ -210,13 +210,6 @@ function createDOMAdvert(advertElement) {
   domAdvert.querySelector('.popup__text--time').textContent = 'Заезд после ' + advertElement.offer.checkin + ', выезд до ' + advertElement.offer.checkout;
   domAdvert.querySelector('.popup__description').textContent = advertElement.offer.description;
   domAdvert.querySelector('.popup__avatar').src = advertElement.author.avatar;
-  domAdvert.querySelector('.popup__close').onclick = popupCloseHandler;
-  document.onkeydown = function (evt) {
-    evt = evt || window.event;
-    if (evt.keyCode === 27) {
-      closePopup();
-    }
-  };
   createDOMPhotos(domAdvert.querySelector('.popup__photos'), advertElement.offer.photos);
   createDOMFeatures(domAdvert.querySelector('.popup__features'), advertElement.offer.features);
   return domAdvert;
@@ -241,33 +234,33 @@ var domPinsArray = createDOMPinsArray(adverts);
 var addressField = document.querySelector('input[name="address"]');
 var adForm = document.querySelector('.ad-form');
 var fieldsetNodeList = adForm.querySelectorAll('fieldset');
-var currentAdvert = null;
+var currentPopup = null;
 
-function setFormDisableFlag(flag) {
-  if (flag) {
-    adForm.classList.add('ad-form--disabled');
-    for (var i = 0; i < fieldsetNodeList.length; i++) {
-      fieldsetNodeList[i].disabled = true;
-    }
-  } else {
-    adForm.classList.remove('ad-form--disabled');
-    for (var j = 0; j < fieldsetNodeList.length; j++) {
-      fieldsetNodeList[j].removeAttribute('disabled');
-    }
+function setFormDisabled() {
+  adForm.classList.add('ad-form--disabled');
+  for (var i = 0; i < fieldsetNodeList.length; i++) {
+    fieldsetNodeList[i].disabled = true;
   }
 }
+function setFormEnabled() {
+  adForm.classList.remove('ad-form--disabled');
+  for (var j = 0; j < fieldsetNodeList.length; j++) {
+    fieldsetNodeList[j].removeAttribute('disabled');
+  }
+}
+
 function isMapActive() {
   return !(map.classList.contains('map--faded'));
 }
 
 function setPageEnabled() {
   map.classList.remove('map--faded');
-  setFormDisableFlag(false);
+  setFormEnabled();
 }
 
 function setPageDisabled() {
   map.classList.add('map--faded');
-  setFormDisableFlag(true);
+  setFormDisabled();
 }
 
 function mapPinMouseupHandler() {
@@ -294,11 +287,12 @@ function setAddressFromPin() {
 
 function setPinClickHandler(advert) {
   return function () {
-    if (currentAdvert !== null) {
-      closePopup();
+    if (currentPopup !== null) {
+      closeCurrentPopup();
     }
-    currentAdvert = createDOMAdvert(advert);
-    addAdvertToPage(currentAdvert);
+    currentPopup = createDOMAdvert(advert);
+    setPopupCloseHandler(currentPopup);
+    addAdvertToPage(currentPopup);
   };
 }
 
@@ -308,14 +302,28 @@ function setPinClickHandlers() {
   }
 }
 
-function closePopup() {
-  currentAdvert.remove();
-  currentAdvert = null;
+function closeCurrentPopup() {
+  currentPopup.remove();
+  currentPopup = null;
 }
 
-function popupCloseHandler() {
-  closePopup();
+function onCloseBtnPressHandler() {
+  closeCurrentPopup();
+  document.removeEventListener('keypress', onKeyEscPressHandler);
 }
+
+function onKeyEscPressHandler(event) {
+  if (event.keyCode === 27) {
+    closeCurrentPopup();
+    document.removeEventListener('keypress', onKeyEscPressHandler);
+  }
+}
+
+function setPopupCloseHandler(popup) {
+  popup.querySelector('.popup__close').addEventListener('click', onCloseBtnPressHandler);
+  document.addEventListener('keypress', onKeyEscPressHandler);
+}
+
 
 setPageDisabled();
 setAddressFromPin();
