@@ -280,7 +280,6 @@ function calculateAddress() {
   if (isMapActive()) {
     pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
   }
-  console.log(pinX + ', ' + pinY);
   return pinX + ', ' + pinY;
 }
 
@@ -335,7 +334,7 @@ function initPage() {
 }
 
 function clearPage() {
-  if (currentPopup != null) {
+  if (currentPopup !== null) {
     closeCurrentPopup();
   }
   initPage();
@@ -398,25 +397,25 @@ function validateCapacity() {
   var message = '';
   switch (selectedRooms) {
     case (1): {
-      if (selectedCapacity != 1) {
+      if (selectedCapacity !== 1) {
         message = 'Для указанного количества комнат можно выбрать количество мест: для 1 гостя';
       }
       break;
     }
     case (2): {
-      if (selectedCapacity != 1 || selectedCapacity != 2) {
+      if (selectedCapacity !== 1 || selectedCapacity !== 2) {
         message = 'Для указанного количества комнат можно выбрать количество мест: для 1 гостя; для 2 гостей';
       }
       break;
     }
     case (3): {
-      if (selectedCapacity != 1 || selectedCapacity != 2 || selectedCapacity != 3) {
+      if (selectedCapacity !== 1 || selectedCapacity !== 2 || selectedCapacity !== 3) {
         message = 'Для указанного количества комнат можно выбрать количество мест: для 1 гостя; для 2 гостей; для 3 гостей';
       }
       break;
     }
     case (100): {
-      if (selectedCapacity != 100) {
+      if (selectedCapacity !== 100) {
         message = 'Для указанного количества комнат можно выбрать количество мест: не для гостей';
       }
       break;
@@ -436,10 +435,10 @@ function clearMap() {
   var currentPin = pinList.firstChild;
   while (i < childrenCount) {
     var pin = currentPin;
-    if (currentPin != pinList.lastChild) {
+    if (currentPin !== pinList.lastChild) {
       currentPin = currentPin.nextSibling;
     }
-    if (pin != undefined && pin.classList != undefined && pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
+    if (pin !== undefined && pin.classList !== undefined && pin.classList.contains('map__pin') && !pin.classList.contains('map__pin--main')) {
       pin.remove();
     }
     i++;
@@ -455,6 +454,6 @@ roomsSelect.addEventListener('change', function () {
   selectedRooms = Number(roomsSelect.options[roomsSelect.selectedIndex].value);
   validateCapacity();
 });
-resetBtn.addEventListener('click', function() {
+resetBtn.addEventListener('click', function () {
   clearPage();
-})
+});
