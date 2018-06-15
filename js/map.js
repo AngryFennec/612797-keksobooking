@@ -328,3 +328,53 @@ function setPopupCloseHandler(popup) {
 setPageDisabled();
 setAddressFromPin();
 mapPin.addEventListener('mouseup', mapPinMouseupHandler);
+
+/* module4-task2 */
+
+var typeSelect = adForm.querySelector('#type');
+var priceInput = adForm.querySelector('#price');
+var checkinSelect = adForm.querySelector('#timein');
+var checkoutSelect = adForm.querySelector('#timeout');
+
+
+function getMinPriceByType(type) {
+  switch (type) {
+    case 'bungalo': {
+      return 0;
+    }
+    case 'flat': {
+      return 1000;
+    }
+    case 'house': {
+      return 5000;
+    }
+    case 'palace': {
+      return 10000;
+    }
+    default: {
+      return 0;
+    }
+  }
+}
+
+function onTypeSelectChangeHandler() {
+  var minPrice = getMinPriceByType(typeSelect.options[typeSelect.selectedIndex].value);
+  priceInput.setAttribute('min', minPrice);
+  priceInput.setAttribute('placeholder', minPrice);
+}
+
+function changeCheckTime(checkField, index) {
+  checkField.selectedIndex = index;
+}
+
+function onCheckinSelectChange() {
+  changeCheckTime(checkoutSelect, checkinSelect.selectedIndex);
+}
+
+function onCheckoutSelectChange() {
+  changeCheckTime(checkinSelect, checkoutSelect.selectedIndex);
+}
+
+typeSelect.addEventListener('change', onTypeSelectChangeHandler);
+checkinSelect.addEventListener('change', onCheckinSelectChange);
+checkoutSelect.addEventListener('change', onCheckoutSelectChange);
