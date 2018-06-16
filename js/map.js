@@ -445,3 +445,68 @@ roomsSelect.addEventListener('change', function () {
   validateCapacity();
 });
 resetBtn.addEventListener('click', onResetClickHandler);
+
+/* module5-task1 */
+
+mapPin.addEventListener('mousedown', function (event) {
+  event.preventDefault();
+  var startCoords = {
+    x: event.clientX,
+    y: event.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var mapPinParent = mapPin.offsetParent;
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var limits = {
+      top: 130,
+      bottom: 630,
+      left: mapPinParent.offsetLeft,
+      right: mapPinParent.offsetWidth
+    };
+
+    function calculateNewCoords() {
+      var newCoords = {
+        x: mapPin.offsetLeft - shift.x,
+        y: mapPin.offsetTop - shift.y
+      };
+      if (mapPin.offsetLeft - shift.x > limits.right) {
+        newCoords.x = limits.right;
+      }
+      if (mapPin.offsetLeft - shift.x < limits.left) {
+        newCoords.x = limits.left;
+      }
+      if (mapPin.offsetTop - shift.y > limits.bottom) {
+        newCoords.y = limits.bottom;
+      }
+      if (mapPin.offsetTop - shift.y < limits.top) {
+        newCoords.y = limits.top;
+      }
+      return newCoords;
+    }
+
+    var newMapPinCoords = calculateNewCoords();
+    mapPin.style.left = newMapPinCoords.x + 'px';
+    mapPin.style.top = newMapPinCoords.y + 'px';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    setAddressFromPin();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
