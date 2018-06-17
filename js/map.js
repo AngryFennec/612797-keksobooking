@@ -282,7 +282,7 @@ function calculateAddress() {
   if (isMapActive()) {
     pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
   }
-  return pinX + ', ' + pinY;
+  return Math.round(pinX) + ', ' + Math.round(pinY);
 }
 
 function setAddressFromPin() {
@@ -448,6 +448,9 @@ resetBtn.addEventListener('click', onResetClickHandler);
 
 /* module5-task1 */
 
+var TOP_LIMIT = 130;
+var BOTTOM_LIMIT = 630;
+
 mapPin.addEventListener('mousedown', function (event) {
   event.preventDefault();
   var startCoords = {
@@ -469,10 +472,10 @@ mapPin.addEventListener('mousedown', function (event) {
     };
 
     var limits = {
-      top: 130,
-      bottom: 630,
-      left: mapPinParent.offsetLeft,
-      right: mapPinParent.offsetWidth
+      top: TOP_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
+      bottom: BOTTOM_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
+      left: mapPinParent.offsetLeft - BIG_PIN_WIDTH / 2,
+      right: mapPinParent.offsetWidth - BIG_PIN_WIDTH / 2
     };
 
     function calculateNewCoords() {
