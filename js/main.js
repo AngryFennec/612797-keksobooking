@@ -1,6 +1,5 @@
 'use strict';
 
-window.domPinsArray = [];
 /* module4-task1 */
 
 var BIG_PIN_HEIGHT = 65;
