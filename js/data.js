@@ -135,5 +135,5 @@
     return newArray;
   }
 
-window.adverts = createAdvertArray();
+  window.adverts = createAdvertArray();
 })();
