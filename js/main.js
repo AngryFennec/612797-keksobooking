@@ -1,42 +1,6 @@
 'use strict';
 
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 70;
-
-var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-var pinList = document.querySelector('.map__pins');
-
-
-function createDOMPin(advertElement) {
-  var domPin = pinTemplate.cloneNode(true);
-  var coordX = advertElement.location.x - PIN_WIDTH / 2;
-  var coordY = advertElement.location.y - PIN_HEIGHT;
-  domPin.style = 'left: ' + coordX + 'px; top: ' + coordY + 'px;';
-  domPin.querySelector('img').src = advertElement.author.avatar;
-  domPin.querySelector('img').alt = advertElement.offer.title;
-  return domPin;
-}
-
-function createDOMPinsArray(advertsArray) {
-  var newArray = [];
-  for (var i = 0; i < advertsArray.length; i++) {
-    newArray.push(createDOMPin(advertsArray[i]));
-  }
-  return newArray;
-}
-
-function createDOMPinsList(domPins) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < domPins.length; i++) {
-    fragment.appendChild(domPins[i]);
-  }
-  return fragment;
-}
-
-function addPinsToPage(fragment) {
-  pinList.appendChild(fragment);
-}
-
+window.domPinsArray = [];
 /* module4-task1 */
 
 var BIG_PIN_HEIGHT = 65;
@@ -44,7 +8,6 @@ var BIG_PIN_WIDTH = 65;
 var TAIL_HEIGHT = 22;
 var mapPin = document.querySelector('.map__pin--main');
 var map = document.querySelector('.map');
-var domPinsArray = createDOMPinsArray(window.adverts);
 var addressField = document.querySelector('input[name="address"]');
 var adForm = document.querySelector('.ad-form');
 var fieldsetNodeList = adForm.querySelectorAll('fieldset');
@@ -81,10 +44,7 @@ function mapPinMouseupHandler() {
   if (!isMapActive()) {
     setPageEnabled();
     setAddressFromPin(TAIL_HEIGHT + BIG_PIN_HEIGHT / 2);
-    if (domPinsArray === null) {
-      domPinsArray = createDOMPinsArray(window.adverts);
-    }
-    addPinsToPage(createDOMPinsList(domPinsArray));
+    window.showPins();
     setPinClickHandlers();
   }
 }
@@ -114,8 +74,8 @@ function setPinClickHandler(advert) {
 }
 
 function setPinClickHandlers() {
-  for (var i = 0; i < domPinsArray.length; i++) {
-    domPinsArray[i].addEventListener('click', setPinClickHandler(window.adverts[i]), false);
+  for (var i = 0; i < window.domPinsArray.length; i++) {
+    window.domPinsArray[i].addEventListener('click', setPinClickHandler(window.adverts[i]), false);
   }
 }
 
@@ -234,11 +194,11 @@ function onCapacitySelectChangeHandler() {
 }
 
 function clearMap() {
-  while (domPinsArray.length > 0) {
-    domPinsArray[0].remove();
-    domPinsArray.shift();
+  while (window.domPinsArray.length > 0) {
+    window.domPinsArray[0].remove();
+    window.domPinsArray.shift();
   }
-  domPinsArray = null;
+  window.domPinsArray = null;
 }
 
 function onResetClickHandler(event) {
