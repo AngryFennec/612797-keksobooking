@@ -6,7 +6,7 @@
 
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var pinList = document.querySelector('.map__pins');
-  var domPinsArray = createDOMPinsArray(window.adverts);
+  var domPinsArray = createDOMPinsArray(window.data.get());
 
   function createDOMPin(advertElement) {
     var domPin = pinTemplate.cloneNode(true);

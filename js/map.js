@@ -74,8 +74,9 @@
 
   function setPinClickHandlers() {
     var domPins = window.pins.getDOMPins();
+    var adverts = window.data.get();
     for (var i = 0; i < domPins.length; i++) {
-      domPins[i].addEventListener('click', setPinClickHandler(window.adverts[i]), false);
+      domPins[i].addEventListener('click', setPinClickHandler(adverts[i]), false);
     }
   }
 

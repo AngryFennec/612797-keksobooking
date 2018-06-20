@@ -39,6 +39,7 @@
   ];
   var shuffledTitles = getShuffledArray(TITLES);
   var shuffledAvatars = createAvatarsArray();
+  var adverts = createAdvertArray();
 
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min;
@@ -135,5 +136,11 @@
     return newArray;
   }
 
-  window.adverts = createAdvertArray();
+  function getAdvertsArray() {
+    return adverts;
+  }
+
+  window.data = {
+    get: getAdvertsArray
+  };
 })();
