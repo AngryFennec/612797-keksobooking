@@ -1,6 +1,6 @@
 'use strict';
 
-window.showAdvert = function (advert) {
+(function () {
 
   var TYPES = {
     'palace': 'Дворец',
@@ -10,6 +10,7 @@ window.showAdvert = function (advert) {
   };
   window.mapBeforePopup = document.querySelector('.map__filters-container');
   var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
+  var currentPopup = null;
 
   function getStringByType(type) {
     return TYPES[type];
@@ -59,6 +60,25 @@ window.showAdvert = function (advert) {
     window.mapBeforePopup.before(node);
   }
 
-  window.currentPopup = createDOMAdvert(advert);
-  addAdvertToPage(window.currentPopup);
-};
+  function getCurrentPopup() {
+    return currentPopup;
+  }
+
+  function showPopup(advert) {
+    currentPopup = createDOMAdvert(advert);
+    addAdvertToPage(currentPopup);
+  }
+
+  function closePopup() {
+    if (currentPopup !== null && currentPopup !== undefined) {
+      currentPopup.remove();
+      currentPopup = undefined;
+    }
+  }
+
+  window.card = {
+    show: showPopup,
+    close: closePopup,
+    get: getCurrentPopup,
+  };
+})();
