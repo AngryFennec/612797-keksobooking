@@ -60,10 +60,6 @@
     window.mapBeforePopup.before(node);
   }
 
-  function getCurrentPopup() {
-    return currentPopup;
-  }
-
   function showPopup(advert) {
     currentPopup = createDOMAdvert(advert);
     addAdvertToPage(currentPopup);
@@ -76,9 +72,13 @@
     }
   }
 
+  function setListenerToCloseBtn(callback) {
+    callback(currentPopup);
+  }
+
   window.card = {
     show: showPopup,
     close: closePopup,
-    get: getCurrentPopup,
+    setListener: setListenerToCloseBtn
   };
 })();
