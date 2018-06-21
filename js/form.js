@@ -12,6 +12,7 @@
     window.pins.clear();
     window.map.init();
   }
+
   var adForm = window.map.getForm();
   var typeSelect = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
@@ -21,6 +22,7 @@
   var capacitySelect = adForm.querySelector('#capacity');
   var selectedRooms = Number(roomsSelect.value);
   var resetBtn = adForm.querySelector('.ad-form__reset');
+  var addressField = document.querySelector('input[name="address"]');
 
   function getMinPriceByType(type) {
     return TYPES_PRICES[type];
@@ -42,6 +44,20 @@
 
   function onCheckoutSelectChangeHandler() {
     changeCheckTime(checkinSelect, checkoutSelect.selectedIndex);
+  }
+
+  function calculateAddress(mapPin) {
+    var pinX = parseInt(mapPin.style.left, 10) + BIG_PIN_WIDTH / 2;
+    var pinY = parseInt(mapPin.style.top, 10) + BIG_PIN_HEIGHT / 2;
+    if (isMapActive()) {
+      pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
+    }
+    return Math.round(pinX) + ', ' + Math.round(pinY);
+  }
+
+  function setAddressFromPin() {
+    var addressValue = calculateAddress(mapPin);
+    addressField.value = addressValue;
   }
 
   function validateCapacity() {
@@ -99,5 +115,8 @@
   });
   resetBtn.addEventListener('click', onResetClickHandler);
 
+window.form = {
+  setAddress: setAddressFromPin
+}
 
 })();
