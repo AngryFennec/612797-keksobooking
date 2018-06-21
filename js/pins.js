@@ -44,7 +44,7 @@
 
   function showPinsOnMap() {
     if (domPinsArray === null) {
-      domPinsArray = createDOMPinsArray(window.adverts);
+      domPinsArray = createDOMPinsArray(window.data.get());
     }
     addPinsToPage(createDOMPinsList(domPinsArray));
   }

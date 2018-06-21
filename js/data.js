@@ -137,6 +137,9 @@
   }
 
   function getAdvertsArray() {
+    if (adverts === null || adverts === undefined) {
+      adverts = createAdvertArray();
+    }
     return adverts;
   }
 

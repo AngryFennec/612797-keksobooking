@@ -6,14 +6,12 @@
     'house': 5000,
     'palace': 100000
   };
+  var BIG_PIN_HEIGHT = 65;
+  var BIG_PIN_WIDTH = 65;
+  var TAIL_HEIGHT = 22;
 
-  function clearPage() {
-    window.card.close();
-    window.pins.clear();
-    window.map.init();
-  }
 
-  var adForm = window.map.getForm();
+  var adForm = document.querySelector('.ad-form');
   var typeSelect = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
   var checkinSelect = adForm.querySelector('#timein');
@@ -21,7 +19,6 @@
   var roomsSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
   var selectedRooms = Number(roomsSelect.value);
-  var resetBtn = adForm.querySelector('.ad-form__reset');
   var addressField = document.querySelector('input[name="address"]');
 
   function getMinPriceByType(type) {
@@ -49,13 +46,13 @@
   function calculateAddress(mapPin) {
     var pinX = parseInt(mapPin.style.left, 10) + BIG_PIN_WIDTH / 2;
     var pinY = parseInt(mapPin.style.top, 10) + BIG_PIN_HEIGHT / 2;
-    if (isMapActive()) {
+    if (window.map.isActive()) {
       pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
     }
     return Math.round(pinX) + ', ' + Math.round(pinY);
   }
 
-  function setAddressFromPin() {
+  function setAddressFromPin(mapPin) {
     var addressValue = calculateAddress(mapPin);
     addressField.value = addressValue;
   }
@@ -98,10 +95,21 @@
   }
 
 
-  function onResetClickHandler(event) {
-    event.preventDefault();
-    adForm.reset();
-    clearPage();
+  var fieldsetNodeList = adForm.querySelectorAll('fieldset');
+
+
+  function setFormDisabled() {
+    adForm.classList.add('ad-form--disabled');
+    for (var i = 0; i < fieldsetNodeList.length; i++) {
+      fieldsetNodeList[i].disabled = true;
+    }
+  }
+
+  function setFormEnabled() {
+    adForm.classList.remove('ad-form--disabled');
+    for (var j = 0; j < fieldsetNodeList.length; j++) {
+      fieldsetNodeList[j].removeAttribute('disabled');
+    }
   }
 
   validateCapacity();
@@ -113,10 +121,17 @@
     selectedRooms = Number(roomsSelect.value);
     validateCapacity();
   });
-  resetBtn.addEventListener('click', onResetClickHandler);
 
-window.form = {
-  setAddress: setAddressFromPin
-}
+
+  function getForm() {
+    return adForm;
+  }
+
+  window.form = {
+    getForm: getForm,
+    setAddress: setAddressFromPin,
+    enable: setFormEnabled,
+    disable: setFormDisabled
+  };
 
 })();
