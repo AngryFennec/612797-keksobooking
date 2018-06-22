@@ -8,7 +8,7 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
-  window.mapBeforePopup = document.querySelector('.map__filters-container');
+  var mapBeforePopup = document.querySelector('.map__filters-container');
   var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
   var currentPopup = null;
 
@@ -57,7 +57,7 @@
   }
 
   function addAdvertToPage(node) {
-    window.mapBeforePopup.before(node);
+    mapBeforePopup.before(node);
   }
 
   function showPopup(advert) {
