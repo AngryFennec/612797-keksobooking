@@ -8,9 +8,9 @@
     'house': 'Дом',
     'bungalo': 'Бунгало'
   };
-  var mapBeforePopup = document.querySelector('.map__filters-container');
   var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
   var currentPopup = null;
+  var popupContainer = null;
 
   function getStringByType(type) {
     return TYPES[type];
@@ -56,13 +56,9 @@
     return domAdvert;
   }
 
-  function addAdvertToPage(node) {
-    mapBeforePopup.before(node);
-  }
-
   function showPopup(advert) {
     currentPopup = createDOMAdvert(advert);
-    addAdvertToPage(currentPopup);
+    popupContainer.appendChild(currentPopup);
   }
 
   function closePopup() {
@@ -76,9 +72,14 @@
     callback(currentPopup);
   }
 
+  function setContainer(container) {
+    popupContainer = container;
+  }
+
   window.card = {
     show: showPopup,
     close: closePopup,
-    setListener: setListenerToCloseBtn
+    setListener: setListenerToCloseBtn,
+    setContainer: setContainer
   };
 })();

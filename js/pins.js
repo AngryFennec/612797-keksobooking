@@ -5,8 +5,8 @@
   var PIN_HEIGHT = 70;
 
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-  var pinList = document.querySelector('.map__pins');
   var domPinsArray = createDOMPinsArray(window.data.get());
+  var pinsContainer = null;
 
   function createDOMPin(advertElement) {
     var domPin = pinTemplate.cloneNode(true);
@@ -34,10 +34,6 @@
     return fragment;
   }
 
-  function addPinsToPage(fragment) {
-    pinList.appendChild(fragment);
-  }
-
   function getDomPinsArray() {
     return domPinsArray;
   }
@@ -46,7 +42,7 @@
     if (domPinsArray === null) {
       domPinsArray = createDOMPinsArray(window.data.get());
     }
-    addPinsToPage(createDOMPinsList(domPinsArray));
+    pinsContainer.appendChild(createDOMPinsList(domPinsArray));
   }
 
   function clearMap() {
@@ -57,10 +53,15 @@
     domPinsArray = null;
   }
 
+  function setContainer(container) {
+    pinsContainer = container;
+  }
+
   window.pins = {
     show: showPinsOnMap,
     getDOMPins: getDomPinsArray,
-    clear: clearMap
+    clear: clearMap,
+    setContainer: setContainer
   };
 
 })();

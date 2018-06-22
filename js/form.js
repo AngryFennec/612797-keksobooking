@@ -6,10 +6,6 @@
     'house': 5000,
     'palace': 100000
   };
-  var BIG_PIN_HEIGHT = 65;
-  var BIG_PIN_WIDTH = 65;
-  var TAIL_HEIGHT = 22;
-
 
   var adForm = document.querySelector('.ad-form');
   var typeSelect = adForm.querySelector('#type');
@@ -43,18 +39,9 @@
     changeCheckTime(checkinSelect, checkoutSelect.selectedIndex);
   }
 
-  function calculateAddress(mapPin) {
-    var pinX = parseInt(mapPin.style.left, 10) + BIG_PIN_WIDTH / 2;
-    var pinY = parseInt(mapPin.style.top, 10) + BIG_PIN_HEIGHT / 2;
-    if (window.map.isActive()) {
-      pinY += BIG_PIN_HEIGHT / 2 + TAIL_HEIGHT;
-    }
-    return Math.round(pinX) + ', ' + Math.round(pinY);
-  }
 
-  function setAddressFromPin(mapPin) {
-    var addressValue = calculateAddress(mapPin);
-    addressField.value = addressValue;
+  function setAddressFromPin(addressString) {
+    addressField.value = addressString;
   }
 
   function validateCapacity() {
@@ -127,11 +114,16 @@
     return adForm;
   }
 
+  function setListenerToResetBtn(callback) {
+    adForm.querySelector('.ad-form__reset').addEventListener('click', callback);
+  }
+
   window.form = {
     getForm: getForm,
     setAddress: setAddressFromPin,
     enable: setFormEnabled,
-    disable: setFormDisabled
+    disable: setFormDisabled,
+    setListenerToResetBtn: setListenerToResetBtn
   };
 
 })();
