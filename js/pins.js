@@ -41,9 +41,6 @@
   }
 
   function showPinsOnMap() {
-/*    if (domPinsArray === null) {
-      domPinsArray = createDOMPinsArray(window.data.get());
-    }*/
     pinList = createDOMPinsList(domPinsArray);
     pinsContainer.appendChild(pinList);
   }
@@ -52,8 +49,8 @@
     while (domPinsArray.length > 0) {
       domPinsArray[0].remove();
       domPinsArray.shift();
+    }
   }
-}
 
 
   function setContainer(container) {

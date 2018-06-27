@@ -1,10 +1,5 @@
 'use strict';
-//xhr.open('GET', '');
 (function () {
-
-  function onError(message) {
-    console.error(message);
-  };
 
   window.load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -12,7 +7,6 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onLoad(xhr.response);
-        //console.log(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }

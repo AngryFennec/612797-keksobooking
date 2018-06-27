@@ -156,12 +156,12 @@
   window.pins.setContainer(document.querySelector('.map__pins'));
   initPage();
   window.form.getForm().addEventListener('submit', function (evt) {
-   window.send(new FormData(window.form.getForm()), function (response) {
-     window.form.disable();
-     window.form.getForm().reset();
-   }, null);
-   evt.preventDefault();
- });
+    window.send(new FormData(window.form.getForm()), function () {
+      window.form.disable();
+      window.form.getForm().reset();
+    }, null);
+    evt.preventDefault();
+  });
   window.form.setListenerToResetBtn(onResetClickHandler);
 
 })();
