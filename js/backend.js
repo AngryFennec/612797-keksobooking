@@ -6,9 +6,10 @@
     var urlGet = 'https://js.dump.academy/keksobooking/data';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
+        window.modal.show('Загрузка прошла успешно');
         onLoad(xhr.response);
       } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Ошибка загрузки');
       }
     });
     xhr.responseType = 'json';
@@ -22,8 +23,9 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onLoad(xhr.response);
+        window.modal.show('Загрузка прошла успешно');
       } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Ошибка загрузки');
       }
     });
     xhr.responseType = 'json';

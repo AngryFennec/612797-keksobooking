@@ -77,7 +77,7 @@
     setPageDisabled();
     window.form.setAddress(window.map.getAddress());
     window.map.getMainPin().addEventListener('mouseup', mapPinMouseupHandler);
-    window.load(setInitData, null);
+    window.load(setInitData, window.modal.show);
   }
 
   window.map.getMainPin().addEventListener('mousedown', function (event) {
@@ -151,7 +151,6 @@
     window.pins.create(response);
   }
 
-  window.load(setInitData, null);
   window.card.setContainer(document.querySelector('.map'));
   window.pins.setContainer(document.querySelector('.map__pins'));
   initPage();
