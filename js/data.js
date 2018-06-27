@@ -40,6 +40,7 @@
   var shuffledTitles = getShuffledArray(TITLES);
   var shuffledAvatars = createAvatarsArray();
   var adverts = createAdvertArray();
+  var advertsJSON = null;
 
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max + 1 - min)) + min;
@@ -143,7 +144,22 @@
     return adverts;
   }
 
+  function setAdverts(response) {
+    adverts = response;
+  }
+
+  function createAdvertsFromJSON(response) {
+    var newArray = [];
+    for (var i = 0; i < response.length; i++) {
+      newArray.push(response[i]);
+    }
+    advertsJSON = newArray;
+    console.log(advertsJSON);
+  }
+
   window.data = {
-    get: getAdvertsArray
+    get: getAdvertsArray,
+    create: createAdvertsFromJSON,
+    setAdverts: setAdverts
   };
 })();

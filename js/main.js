@@ -22,6 +22,7 @@
   function setPageEnabled() {
     window.map.enable();
     window.form.enable();
+
   }
 
   function setPageDisabled() {
@@ -76,6 +77,7 @@
     setPageDisabled();
     window.form.setAddress(window.map.getAddress());
     window.map.getMainPin().addEventListener('mouseup', mapPinMouseupHandler);
+    window.load(setInitData, null);
   }
 
   window.map.getMainPin().addEventListener('mousedown', function (event) {
@@ -133,6 +135,9 @@
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       window.form.setAddress(window.map.getAddress());
+      if (!window.form.isEnabled()) {
+        window.form.enable();
+      }
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -141,9 +146,22 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
+  function setInitData(response) {
+    window.data.setAdverts(response);
+    window.pins.create(response);
+  }
+
+  window.load(setInitData, null);
   window.card.setContainer(document.querySelector('.map'));
   window.pins.setContainer(document.querySelector('.map__pins'));
   initPage();
+  window.form.getForm().addEventListener('submit', function (evt) {
+   window.send(new FormData(window.form.getForm()), function (response) {
+     window.form.disable();
+     window.form.getForm().reset();
+   }, null);
+   evt.preventDefault();
+ });
   window.form.setListenerToResetBtn(onResetClickHandler);
 
 })();

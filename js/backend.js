@@ -6,15 +6,13 @@
     console.error(message);
   };
 
-  var onSuccess = function (data) {
-    console.log(data);
-  };
-  window.load = function (url, onLoad, onError) {
+  window.load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     var urlGet = 'https://js.dump.academy/keksobooking/data';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onLoad(xhr.response);
+        //console.log(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -23,6 +21,7 @@
     xhr.open('GET', urlGet);
     xhr.send();
   };
+
   window.send = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     var urlPost = 'https://js.dump.academy/keksobooking';
@@ -35,6 +34,6 @@
     });
     xhr.responseType = 'json';
     xhr.open('POST', urlPost);
-    xhr.send();
+    xhr.send(data);
   };
 })();

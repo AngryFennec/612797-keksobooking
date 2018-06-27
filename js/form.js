@@ -99,6 +99,10 @@
     }
   }
 
+  function isFormEnabled() {
+    return !adForm.classList.contains('ad-form--disabled');
+  }
+
   validateCapacity();
   typeSelect.addEventListener('change', onTypeSelectChangeHandler);
   checkinSelect.addEventListener('change', onCheckinSelectChangeHandler);
@@ -123,7 +127,8 @@
     setAddress: setAddressFromPin,
     enable: setFormEnabled,
     disable: setFormDisabled,
-    setListenerToResetBtn: setListenerToResetBtn
+    setListenerToResetBtn: setListenerToResetBtn,
+    isEnabled: isFormEnabled
   };
 
 })();
