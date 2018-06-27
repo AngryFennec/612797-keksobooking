@@ -1,15 +1,15 @@
 'use strict';
 (function () {
 
-  window.load = function (onLoad, onError) {
+  window.load = function (onDataLoadSuccess, onDataLoadError) {
     var xhr = new XMLHttpRequest();
     var urlGet = 'https://js.dump.academy/keksobooking/data';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         window.modal.show('Загрузка прошла успешно');
-        onLoad(xhr.response);
+        onDataLoadSuccess(xhr.response);
       } else {
-        onError('Ошибка загрузки');
+        onDataLoadError('Ошибка загрузки');
       }
     });
     xhr.responseType = 'json';
@@ -17,15 +17,14 @@
     xhr.send();
   };
 
-  window.send = function (data, onLoad, onError) {
+  window.send = function (data, onDataSendSuccess, onDataSendError) {
     var xhr = new XMLHttpRequest();
     var urlPost = 'https://js.dump.academy/keksobooking';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        onLoad(xhr.response);
-        window.modal.show('Загрузка прошла успешно');
+        onDataSendSuccess(xhr.response);
       } else {
-        onError('Ошибка загрузки');
+        onDataSendError('Ошибка загрузки');
       }
     });
     xhr.responseType = 'json';

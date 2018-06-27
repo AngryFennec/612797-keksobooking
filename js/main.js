@@ -36,7 +36,6 @@
       setPageEnabled();
       window.form.setAddress(window.map.getMainPin());
       window.load(setInitData, window.modal.show);
-
     }
   }
 
@@ -160,7 +159,8 @@
     window.send(new FormData(window.form.getForm()), function () {
       window.form.disable();
       window.form.getForm().reset();
-    }, null);
+      window.modal.show('Загрузка прошла успешно');
+    }, window.modal.show);
     evt.preventDefault();
   });
   window.form.setListenerToResetBtn(onResetClickHandler);
