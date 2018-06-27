@@ -34,8 +34,8 @@
     if (!window.map.isActive()) {
       setPageEnabled();
       window.form.setAddress(window.map.getMainPin());
-      window.pins.show();
-      setPinClickHandlers();
+      window.load(setInitData, window.modal.show);
+
     }
   }
 
@@ -77,7 +77,6 @@
     setPageDisabled();
     window.form.setAddress(window.map.getAddress());
     window.map.getMainPin().addEventListener('mouseup', mapPinMouseupHandler);
-    window.load(setInitData, window.modal.show);
   }
 
   window.map.getMainPin().addEventListener('mousedown', function (event) {
@@ -149,6 +148,8 @@
   function setInitData(response) {
     window.data.setAdverts(response);
     window.pins.create(response);
+    window.pins.show();
+    setPinClickHandlers();
   }
 
   window.card.setContainer(document.querySelector('.map'));
