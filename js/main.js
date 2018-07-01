@@ -1,10 +1,13 @@
 'use strict';
 (function () {
+
   var TOP_LIMIT = 130;
   var BOTTOM_LIMIT = 630;
   var BIG_PIN_HEIGHT = 65;
   var BIG_PIN_WIDTH = 65;
   var TAIL_HEIGHT = 22;
+  var adverts = null;
+  var mainPin = window.map.getMainPin();
 
   function clearPage() {
     window.card.close();
@@ -16,6 +19,15 @@
     event.preventDefault();
     window.form.getForm().reset();
     clearPage();
+  }
+
+  function onSubmitBtnClickHandler(event) {
+    window.backend.send(new FormData(window.form.getForm()), function () {
+      window.form.disable();
+      window.form.getForm().reset();
+      window.modal.show('Загрузка прошла успешно');
+    }, window.modal.show);
+    event.preventDefault();
   }
 
 
@@ -32,9 +44,8 @@
   function mapPinMouseupHandler() {
     if (!window.map.isActive()) {
       setPageEnabled();
-      window.form.setAddress(window.map.getMainPin());
-      window.pins.show();
-      setPinClickHandlers();
+      window.form.setAddress(window.map.getAddress());
+      window.backend.load(onDataLoad, window.modal.show);
     }
   }
 
@@ -53,7 +64,6 @@
 
   function setPinClickHandlers() {
     var domPins = window.pins.getDOMPins();
-    var adverts = window.data.get();
     for (var i = 0; i < domPins.length; i++) {
       domPins[i].addEventListener('click', setPinClickHandler(adverts[i]), false);
     }
@@ -78,7 +88,18 @@
     window.map.getMainPin().addEventListener('mouseup', mapPinMouseupHandler);
   }
 
-  window.map.getMainPin().addEventListener('mousedown', function (event) {
+  function getLimits() {
+    var mapPinParent = mainPin.offsetParent;
+    var limits = {
+      top: TOP_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
+      bottom: BOTTOM_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
+      left: mapPinParent.offsetLeft - BIG_PIN_WIDTH / 2,
+      right: mapPinParent.offsetWidth - BIG_PIN_WIDTH / 2
+    };
+    return limits;
+  }
+
+  mainPin.addEventListener('mousedown', function (event) {
     event.preventDefault();
     var startCoords = {
       x: event.clientX,
@@ -87,7 +108,7 @@
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      var mapPinParent = window.map.getMainPin().offsetParent;
+
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -98,41 +119,37 @@
         y: moveEvt.clientY
       };
 
-      var limits = {
-        top: TOP_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
-        bottom: BOTTOM_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
-        left: mapPinParent.offsetLeft - BIG_PIN_WIDTH / 2,
-        right: mapPinParent.offsetWidth - BIG_PIN_WIDTH / 2
-      };
+      var limits = getLimits();
 
       function calculateNewCoords() {
         var newCoords = {
-          x: window.map.getMainPin().offsetLeft - shift.x,
-          y: window.map.getMainPin().offsetTop - shift.y
+          x: mainPin.offsetLeft - shift.x,
+          y: mainPin.offsetTop - shift.y
         };
-        if (window.map.getMainPin().offsetLeft - shift.x > limits.right) {
+        if (mainPin.offsetLeft - shift.x > limits.right) {
           newCoords.x = limits.right;
         }
-        if (window.map.getMainPin().offsetLeft - shift.x < limits.left) {
+        if (mainPin.offsetLeft - shift.x < limits.left) {
           newCoords.x = limits.left;
         }
-        if (window.map.getMainPin().offsetTop - shift.y > limits.bottom) {
+        if (mainPin.offsetTop - shift.y > limits.bottom) {
           newCoords.y = limits.bottom;
         }
-        if (window.map.getMainPin().offsetTop - shift.y < limits.top) {
+        if (mainPin.offsetTop - shift.y < limits.top) {
           newCoords.y = limits.top;
         }
         return newCoords;
       }
 
       var newMapPinCoords = calculateNewCoords();
-      window.map.getMainPin().style.left = newMapPinCoords.x + 'px';
-      window.map.getMainPin().style.top = newMapPinCoords.y + 'px';
+      mainPin.style.left = newMapPinCoords.x + 'px';
+      mainPin.style.top = newMapPinCoords.y + 'px';
     };
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       window.form.setAddress(window.map.getAddress());
+      setPageEnabled();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -141,9 +158,16 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
+  function onDataLoad(response) {
+    adverts = response;
+    window.pins.create(response);
+    window.pins.show();
+    setPinClickHandlers();
+  }
+
   window.card.setContainer(document.querySelector('.map'));
   window.pins.setContainer(document.querySelector('.map__pins'));
   initPage();
+  window.form.setListenerToSubmitBtn(onSubmitBtnClickHandler);
   window.form.setListenerToResetBtn(onResetClickHandler);
-
 })();

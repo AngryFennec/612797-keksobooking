@@ -99,6 +99,10 @@
     }
   }
 
+  function isFormEnabled() {
+    return !adForm.classList.contains('ad-form--disabled');
+  }
+
   validateCapacity();
   typeSelect.addEventListener('change', onTypeSelectChangeHandler);
   checkinSelect.addEventListener('change', onCheckinSelectChangeHandler);
@@ -118,12 +122,18 @@
     adForm.querySelector('.ad-form__reset').addEventListener('click', callback);
   }
 
+  function setListenerToSubmitBtn(callback) {
+    adForm.addEventListener('submit', callback);
+  }
+
   window.form = {
     getForm: getForm,
     setAddress: setAddressFromPin,
     enable: setFormEnabled,
     disable: setFormDisabled,
-    setListenerToResetBtn: setListenerToResetBtn
+    setListenerToResetBtn: setListenerToResetBtn,
+    setListenerToSubmitBtn: setListenerToSubmitBtn,
+    isEnabled: isFormEnabled
   };
 
 })();
