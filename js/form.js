@@ -122,12 +122,17 @@
     adForm.querySelector('.ad-form__reset').addEventListener('click', callback);
   }
 
+  function setListenerToSubmitBtn(callback) {
+    adForm.addEventListener('submit', callback);
+  }
+
   window.form = {
     getForm: getForm,
     setAddress: setAddressFromPin,
     enable: setFormEnabled,
     disable: setFormDisabled,
     setListenerToResetBtn: setListenerToResetBtn,
+    setListenerToSubmitBtn: setListenerToSubmitBtn,
     isEnabled: isFormEnabled
   };
 
