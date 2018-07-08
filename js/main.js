@@ -6,7 +6,6 @@
   var BIG_PIN_HEIGHT = 65;
   var BIG_PIN_WIDTH = 65;
   var TAIL_HEIGHT = 22;
-  var adverts = null;
   var mainPin = window.map.getMainPin();
 
   function clearPage() {
@@ -62,10 +61,10 @@
     };
   }
 
-  function setPinClickHandlers() {
+  function setPinClickHandlers(advertsArray) {
     var domPins = window.pins.getDOMPins();
     for (var i = 0; i < domPins.length; i++) {
-      domPins[i].addEventListener('click', setPinClickHandler(adverts[i]), false);
+      domPins[i].addEventListener('click', setPinClickHandler(advertsArray[i]), false);
     }
   }
 
@@ -158,11 +157,15 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  function onDataLoad(response) {
-    adverts = response;
+  function showChangedPins(response) {
     window.pins.create(response);
     window.pins.show();
-    setPinClickHandlers();
+    setPinClickHandlers(response);
+  }
+
+  function onDataLoad(response) {
+    window.filter.setDebounce(window.debounce.thisFunction);
+    window.filter.set(response, showChangedPins);
   }
 
   window.card.setContainer(document.querySelector('.map'));

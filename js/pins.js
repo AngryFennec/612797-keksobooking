@@ -20,6 +20,7 @@
   }
 
   function createDOMPinsArray(advertsArray) {
+    clearMap();
     var newArray = [];
     for (var i = 0; i < advertsArray.length; i++) {
       newArray.push(createDOMPin(advertsArray[i]));
@@ -46,9 +47,11 @@
   }
 
   function clearMap() {
-    while (domPinsArray.length > 0) {
-      domPinsArray[0].remove();
-      domPinsArray.shift();
+    if (domPinsArray !== null) {
+      while (domPinsArray.length > 0) {
+        domPinsArray[0].remove();
+        domPinsArray.shift();
+      }
     }
   }
 
