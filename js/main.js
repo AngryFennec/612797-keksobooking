@@ -164,7 +164,7 @@
   }
 
   function onDataLoad(response) {
-    window.filter.setDebounce(window.debounce.thisFunction);
+    window.filter.setDebounce(window.debounce);
     window.filter.set(response, showChangedPins);
   }
 

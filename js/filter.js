@@ -63,25 +63,27 @@
     return getCheckedFeatures().length === 0 ? true : isNested(getCheckedFeatures(), element.offer.features);
   }
 
-  function setDebounce(callback) {
-    onFilterFormChange = callback(function () {
-      var types = dataGlobal.filter(function (it) {
-        return checkType(it);
-      });
-      var prices = types.filter(function (it) {
-        return checkPrice(it);
-      });
-      var room = prices.filter(function (it) {
-        return checkRooms(it);
-      });
-      var guest = room.filter(function (it) {
-        return checkGuests(it);
-      });
-      var feature = guest.filter(function (it) {
-        return checkFeatures(it);
-      });
-      changeCallback(feature);
+  function getFilterState() {
+    var types = dataGlobal.filter(function (it) {
+      return checkType(it);
     });
+    var prices = types.filter(function (it) {
+      return checkPrice(it);
+    });
+    var room = prices.filter(function (it) {
+      return checkRooms(it);
+    });
+    var guest = room.filter(function (it) {
+      return checkGuests(it);
+    });
+    var feature = guest.filter(function (it) {
+      return checkFeatures(it);
+    });
+    changeCallback(feature);
+  }
+
+  function setDebounce(callback) {
+    onFilterFormChange = callback(getFilterState);
   }
 
   function setFilters(data, callback) {
