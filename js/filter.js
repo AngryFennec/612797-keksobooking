@@ -64,22 +64,10 @@
   }
 
   function getFilterState() {
-    var types = dataGlobal.filter(function (it) {
-      return checkType(it);
+    var filteredData = dataGlobal.filter(function (it) {
+      return checkType(it) && checkPrice(it) && checkRooms(it) && checkGuests(it) && checkFeatures(it);
     });
-    var prices = types.filter(function (it) {
-      return checkPrice(it);
-    });
-    var room = prices.filter(function (it) {
-      return checkRooms(it);
-    });
-    var guest = room.filter(function (it) {
-      return checkGuests(it);
-    });
-    var feature = guest.filter(function (it) {
-      return checkFeatures(it);
-    });
-    changeCallback(feature);
+    changeCallback(filteredData);
   }
 
   function setDebounce(callback) {
