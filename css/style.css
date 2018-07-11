@@ -555,6 +555,7 @@ fieldset {
   display: -ms-flexbox;
   display: flex;
   width: 150px;
+  position: relative;
 }
 
 .ad-form-header__info {
@@ -604,6 +605,18 @@ fieldset {
 .ad-form__label {
   display: block;
   padding-bottom: 5px;
+}
+
+.ad-form-header__drop-zone {
+  display: block;
+}
+
+.ad-form__field input[type=file] {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  top: 0;
+  left: 0;
 }
 
 .ad-form__element input,
