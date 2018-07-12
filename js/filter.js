@@ -52,15 +52,15 @@
     return guests.value === 'any' ? true : parseInt(element.offer.guests, 10) === parseInt(guests.value, 10);
   }
 
-  function isNested(innerArray, outerArray) {
-    var marked = innerArray.filter(function (element) {
-      return outerArray.indexOf(element) !== -1;
+  function isNested(arr1, arr2) {
+    var marked = arr1.filter(function (it) {
+      return arr2.indexOf(it) !== -1;
     });
-    return marked.length === innerArray.length;
+    return marked.length === arr1.length;
   }
 
   function checkFeatures(element) {
-    return getCheckedFeatures().length ? isNested(getCheckedFeatures(), element.offer.features) : true;
+    return getCheckedFeatures().length === 0 ? true : isNested(getCheckedFeatures(), element.offer.features);
   }
 
   function getFilterState() {

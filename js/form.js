@@ -1,24 +1,24 @@
 'use strict';
 (function () {
-  var TYPES_PRICES = {
-    'bungalo': 0,
-    'flat': 1000,
-    'house': 5000,
-    'palace': 100000
+  var Price = {
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 100000
   };
 
   var adForm = document.querySelector('.ad-form');
   var typeSelect = adForm.querySelector('#type');
   var priceInput = adForm.querySelector('#price');
-  var checkinSelect = adForm.querySelector('#timein');
-  var checkoutSelect = adForm.querySelector('#timeout');
+  var checkInSelect = adForm.querySelector('#timein');
+  var checkOutSelect = adForm.querySelector('#timeout');
   var roomsSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
-  var selectedRooms = Number(roomsSelect.value);
+  var selectedRooms = parseInt(roomsSelect.value, 10);
   var addressField = document.querySelector('input[name="address"]');
 
   function getMinPriceByType(type) {
-    return TYPES_PRICES[type];
+    return Price[type.toUpperCase()];
   }
 
   function onTypeSelectChangeHandler() {
@@ -27,16 +27,12 @@
     priceInput.setAttribute('placeholder', minPrice);
   }
 
-  function changeCheckTime(checkField, index) {
-    checkField.selectedIndex = index;
+  function onCheckInSelectChangeHandler() {
+    checkOutSelect.value = checkInSelect.value;
   }
 
-  function onCheckinSelectChangeHandler() {
-    changeCheckTime(checkoutSelect, checkinSelect.selectedIndex);
-  }
-
-  function onCheckoutSelectChangeHandler() {
-    changeCheckTime(checkinSelect, checkoutSelect.selectedIndex);
+  function onCheckOutSelectChangeHandler() {
+    checkInSelect.value = checkOutSelect.value;
   }
 
 
@@ -45,7 +41,7 @@
   }
 
   function validateCapacity() {
-    var selectedCapacity = Number(capacitySelect.value);
+    var selectedCapacity = parseInt(capacitySelect.value, 10);
     capacitySelect.setCustomValidity('');
     var message = '';
     switch (selectedRooms) {
@@ -82,21 +78,21 @@
   }
 
 
-  var fieldsetNodeList = adForm.querySelectorAll('fieldset');
+  var fieldsetNodeList = Array.from(adForm.querySelectorAll('fieldset'));
 
 
   function setFormDisabled() {
     adForm.classList.add('ad-form--disabled');
-    for (var i = 0; i < fieldsetNodeList.length; i++) {
-      fieldsetNodeList[i].disabled = true;
-    }
+    fieldsetNodeList.forEach(function (element) {
+      element.disabled = true;
+    });
   }
 
   function setFormEnabled() {
     adForm.classList.remove('ad-form--disabled');
-    for (var j = 0; j < fieldsetNodeList.length; j++) {
-      fieldsetNodeList[j].removeAttribute('disabled');
-    }
+    fieldsetNodeList.forEach(function (element) {
+      element.removeAttribute('disabled');
+    });
   }
 
   function isFormEnabled() {
@@ -105,11 +101,11 @@
 
   validateCapacity();
   typeSelect.addEventListener('change', onTypeSelectChangeHandler);
-  checkinSelect.addEventListener('change', onCheckinSelectChangeHandler);
-  checkoutSelect.addEventListener('change', onCheckoutSelectChangeHandler);
+  checkInSelect.addEventListener('change', onCheckInSelectChangeHandler);
+  checkOutSelect.addEventListener('change', onCheckOutSelectChangeHandler);
   capacitySelect.addEventListener('change', onCapacitySelectChangeHandler);
   roomsSelect.addEventListener('change', function () {
-    selectedRooms = Number(roomsSelect.value);
+    selectedRooms = parseInt(roomsSelect.value, 10);
     validateCapacity();
   });
 

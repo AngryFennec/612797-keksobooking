@@ -13,7 +13,7 @@
   var popupContainer = null;
 
   function getStringByType(type) {
-    return Title[type];
+    return Title[type.toUpperCase()];
   }
 
   function createDOMPhotos(domPhotos, photoArray) {

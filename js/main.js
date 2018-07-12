@@ -1,12 +1,24 @@
 'use strict';
 (function () {
+  var Limit = {
+    TOP: 130,
+    BOTTOM: 630
+  };
 
-  var TOP_LIMIT = 130;
-  var BOTTOM_LIMIT = 630;
-  var BIG_PIN_HEIGHT = 65;
-  var BIG_PIN_WIDTH = 65;
-  var TAIL_HEIGHT = 22;
+  var Pin = {
+    HEIGHT: 65,
+    WIDTH: 65,
+    TAIL: 22,
+  };
+
   var mainPin = window.map.getMainPin();
+  var mapPinParent = mainPin.offsetParent;
+  var limits = {
+    top: Limit.TOP - Pin.HEIGHT - Pin.TAIL,
+    bottom: Limit.BOTTOM - Pin.HEIGHT - Pin.TAIL,
+    left: mapPinParent.offsetLeft - Pin.WIDTH / 2,
+    right: mapPinParent.offsetWidth - Pin.WIDTH / 2
+  };
 
   function clearPage() {
     window.card.close();
@@ -84,19 +96,9 @@
 
   function initPage() {
     setPageDisabled();
+    window.map.resetPin();
     window.form.setAddress(window.map.getAddress());
     window.map.getMainPin().addEventListener('mouseup', mapPinMouseupHandler);
-  }
-
-  function getLimits() {
-    var mapPinParent = mainPin.offsetParent;
-    var limits = {
-      top: TOP_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
-      bottom: BOTTOM_LIMIT - BIG_PIN_HEIGHT - TAIL_HEIGHT,
-      left: mapPinParent.offsetLeft - BIG_PIN_WIDTH / 2,
-      right: mapPinParent.offsetWidth - BIG_PIN_WIDTH / 2
-    };
-    return limits;
   }
 
   mainPin.addEventListener('mousedown', function (event) {
@@ -118,8 +120,6 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-
-      var limits = getLimits();
 
       function calculateNewCoords() {
         var newCoords = {
