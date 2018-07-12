@@ -2,18 +2,18 @@
 
 (function () {
 
-  var TYPES = {
-    'palace': 'Дворец',
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
+  var Title = {
+    PALACE: 'Дворец',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    BUNGALO: 'Бунгало'
   };
   var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
   var currentPopup = null;
   var popupContainer = null;
 
   function getStringByType(type) {
-    return TYPES[type];
+    return Title[type];
   }
 
   function createDOMPhotos(domPhotos, photoArray) {
@@ -62,9 +62,9 @@
   }
 
   function closePopup() {
-    if (currentPopup !== null && currentPopup !== undefined) {
+    if (currentPopup) {
       currentPopup.remove();
-      currentPopup = undefined;
+      currentPopup = null;
     }
   }
 
