@@ -1,35 +1,41 @@
 'use strict';
 (function () {
 
+  var GOOD_STATUS = 200;
+
+  function createXhrRequest() {
+    var newXhr = new XMLHttpRequest();
+    newXhr.responseType = 'json';
+    return newXhr;
+  }
+
   function loadData(onDataLoadSuccess, onDataLoadError) {
-    var xhr = new XMLHttpRequest();
     var urlGet = 'https://js.dump.academy/keksobooking/data';
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        window.modal.show('Загрузка прошла успешно');
-        onDataLoadSuccess(xhr.response);
+    var xhrGet = createXhrRequest();
+    xhrGet.addEventListener('load', function () {
+      if (xhrGet.status === GOOD_STATUS) {
+        onDataLoadSuccess(xhrGet.response);
       } else {
         onDataLoadError('Ошибка загрузки');
       }
     });
-    xhr.responseType = 'json';
-    xhr.open('GET', urlGet);
-    xhr.send();
+    xhrGet.open('GET', urlGet);
+    xhrGet.send();
   }
 
   function sendData(data, onDataSendSuccess, onDataSendError) {
-    var xhr = new XMLHttpRequest();
     var urlPost = 'https://js.dump.academy/keksobooking';
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onDataSendSuccess(xhr.response);
+    var xhrPost = createXhrRequest();
+    xhrPost.addEventListener('load', function () {
+      if (xhrPost.status === GOOD_STATUS) {
+        window.modal.show('Отправка прошла успешно');
+        onDataSendSuccess(xhrPost.response);
       } else {
-        onDataSendError('Ошибка загрузки');
+        onDataSendError('Ошибка отправки');
       }
     });
-    xhr.responseType = 'json';
-    xhr.open('POST', urlPost);
-    xhr.send(data);
+    xhrPost.open('POST', urlPost);
+    xhrPost.send(data);
   }
 
   window.backend = {
