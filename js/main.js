@@ -53,12 +53,10 @@
     window.form.disable();
   }
 
-  function mapPinMouseupHandler() {
-    if (!window.map.isActive()) {
-      setPageEnabled();
-      window.form.setAddress(window.map.getAddress());
-      window.backend.load(onDataLoad, window.modal.show);
-    }
+  function mapPinMouseUpHandler() {
+    setPageEnabled();
+    window.form.setAddress(window.map.getAddress());
+    window.backend.load(onDataLoad, window.modal.show);
   }
 
   function setPopupCloseHandler(currentPopup) {
@@ -98,7 +96,7 @@
     setPageDisabled();
     window.map.resetPin();
     window.form.setAddress(window.map.getAddress());
-    window.map.getMainPin().addEventListener('mouseup', mapPinMouseupHandler);
+    window.map.getMainPin().addEventListener('mouseup', mapPinMouseUpHandler);
   }
 
   mainPin.addEventListener('mousedown', function (event) {
@@ -165,6 +163,7 @@
   }
 
   function onDataLoad(response) {
+    window.map.getMainPin().removeEventListener('mouseup', mapPinMouseUpHandler);
     window.filter.setDebounce(window.debounce);
     window.filter.set(response, showChangedPins);
   }
