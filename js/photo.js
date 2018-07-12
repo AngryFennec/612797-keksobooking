@@ -7,8 +7,9 @@
   var preview = document.querySelector('.ad-form-header__preview img');
   var photoContainer = document.querySelector('.ad-form__photo');
   var photoUpload = document.querySelector('.ad-form__upload input[type=file]');
+  var defaultAvatar = preview.src;
 
-  function onPhotoUpload(inputFile, inputPhoto) {
+  function showPhoto(inputFile, inputPhoto) {
     var file = inputFile.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -27,21 +28,36 @@
     }
   }
 
-  function onHousePhotoUpload() {
-    var newPhoto = document.createElement('img');
-    newPhoto.classList.add('ad-form__photo-image');
-    newPhoto.width = 70;
-    newPhoto.height = 70;
-    newPhoto.alt = 'Фото жилья';
+  function createNewImg() {
+    var img = document.createElement('img');
+    img.classList.add('ad-form__photo-image');
+    img.width = 70;
+    img.height = 70;
+    img.alt = 'Фото жилья';
+    return img;
+  }
+
+  function resetPhoto() {
+    photoContainer.innerHTML = ('');
+    preview.src = defaultAvatar;
+  }
+
+
+  function addHousePhoto() {
+    var newPhoto = createNewImg();
     photoContainer.appendChild(newPhoto);
-    onPhotoUpload(photoUpload, newPhoto);
+    showPhoto(photoUpload, newPhoto);
   }
 
   photoUpload.addEventListener('change', function () {
-    onHousePhotoUpload();
+    addHousePhoto();
   });
 
   fileChooser.addEventListener('change', function () {
-    onPhotoUpload(fileChooser, preview);
+    showPhoto(fileChooser, preview);
   });
+
+  window.photo = {
+    resetPhoto: resetPhoto
+  };
 })();

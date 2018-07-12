@@ -11,6 +11,7 @@
   function clearPage() {
     window.card.close();
     window.pins.clear();
+    window.photo.resetPhoto();
     initPage();
   }
 
