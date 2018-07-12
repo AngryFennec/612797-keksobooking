@@ -13,9 +13,9 @@
 
   function getCheckedFeatures() {
     var newArray = [];
-    Array.from(features).forEach(function (el) {
-      if (el.checked) {
-        newArray.push(el.value);
+    Array.from(features).forEach(function (element) {
+      if (element.checked) {
+        newArray.push(element.value);
       }
     });
     return newArray;
@@ -52,15 +52,15 @@
     return guests.value === 'any' ? true : parseInt(element.offer.guests, 10) === parseInt(guests.value, 10);
   }
 
-  function isNested(arr1, arr2) {
-    var marked = arr1.filter(function (it) {
-      return arr2.indexOf(it) !== -1;
+  function isNested(innerArray, outerArray) {
+    var marked = innerArray.filter(function (element) {
+      return outerArray.indexOf(element) !== -1;
     });
-    return marked.length === arr1.length;
+    return marked.length === innerArray.length;
   }
 
   function checkFeatures(element) {
-    return getCheckedFeatures().length === 0 ? true : isNested(getCheckedFeatures(), element.offer.features);
+    return getCheckedFeatures().length ? isNested(getCheckedFeatures(), element.offer.features) : true;
   }
 
   function getFilterState() {
