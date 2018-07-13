@@ -7,18 +7,15 @@
   var guests = filterForm.querySelector('#housing-guests');
   var featuresFieldset = filterForm.querySelector('#housing-features');
   var features = featuresFieldset.querySelectorAll('.map__checkbox');
-  var changeCallback = null;
-  var dataGlobal = null;
-  var onFilterFormChange;
 
   function getCheckedFeatures() {
-    var newArray = [];
-    Array.from(features).forEach(function (el) {
-      if (el.checked) {
-        newArray.push(el.value);
+    var checkedValues = [];
+    Array.from(features).forEach(function (element) {
+      if (element.checked) {
+        checkedValues.push(element.value);
       }
     });
-    return newArray;
+    return checkedValues;
   }
 
   function checkType(element) {
@@ -52,38 +49,34 @@
     return guests.value === 'any' ? true : parseInt(element.offer.guests, 10) === parseInt(guests.value, 10);
   }
 
-  function isNested(arr1, arr2) {
-    var marked = arr1.filter(function (it) {
-      return arr2.indexOf(it) !== -1;
+  function isNested(inners, outers) {
+    var markedValues = inners.filter(function (element) {
+      return outers.indexOf(element) !== -1;
     });
-    return marked.length === arr1.length;
+    return markedValues.length === inners.length;
   }
 
   function checkFeatures(element) {
     return getCheckedFeatures().length === 0 ? true : isNested(getCheckedFeatures(), element.offer.features);
   }
 
-  function getFilterState() {
-    var filteredData = dataGlobal.filter(function (it) {
-      return checkType(it) && checkPrice(it) && checkRooms(it) && checkGuests(it) && checkFeatures(it);
+  function getFilterState(dataValues) {
+    var filteredData = dataValues.filter(function (element) {
+      return checkType(element) && checkPrice(element) && checkRooms(element) && checkGuests(element) && checkFeatures(element);
     });
-    changeCallback(filteredData);
+    return filteredData.length > 5 ? filteredData.slice(0, 5) : filteredData;
   }
 
-  function setDebounce(callback) {
-    onFilterFormChange = callback(getFilterState);
-  }
-
-  function setFilters(data, callback) {
-    changeCallback = callback;
-    dataGlobal = data;
-    onFilterFormChange();
-    filterForm.addEventListener('change', onFilterFormChange);
+  function setFilters(dataValues, callback) {
+    filterForm.addEventListener('change', function () {
+      var filteredData = getFilterState(dataValues);
+      callback(filteredData);
+    });
   }
 
   window.filter = {
     set: setFilters,
-    setDebounce: setDebounce
+    get: getFilterState
   };
 
 })();

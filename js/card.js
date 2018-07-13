@@ -2,40 +2,41 @@
 
 (function () {
 
-  var TYPES = {
-    'palace': 'Дворец',
-    'flat': 'Квартира',
-    'house': 'Дом',
-    'bungalo': 'Бунгало'
+  var Title = {
+    PALACE: 'Дворец',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    BUNGALO: 'Бунгало'
   };
   var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
   var currentPopup = null;
   var popupContainer = null;
 
   function getStringByType(type) {
-    return TYPES[type];
+    return Title[type.toUpperCase()];
   }
 
-  function createDOMPhotos(domPhotos, photoArray) {
+  function createDOMPhotos(domPhotos, photos) {
     var photo = domPhotos.querySelector('.popup__photo');
-    photo.src = photoArray[0];
+    photo.src = photos[0];
     domPhotos.appendChild(photo);
-    for (var i = 1; i < photoArray.length; i++) {
+    for (var i = 1; i < photos.length; i++) {
       var newPhoto = photo.cloneNode(true);
-      newPhoto.src = photoArray[i];
+      newPhoto.src = photos[i];
       domPhotos.appendChild(newPhoto);
     }
   }
+
   function clearChildren(parent) {
     parent.innerHTML = '';
   }
 
-  function createDOMFeatures(domUl, featuresArray) {
+  function createDOMFeatures(domUl, features) {
     clearChildren(domUl);
-    for (var i = 0; i < featuresArray.length; i++) {
+    for (var i = 0; i < features.length; i++) {
       var li = document.createElement('li');
       li.classList.add('popup__feature');
-      var classString = 'popup__feature--' + featuresArray[i];
+      var classString = 'popup__feature--' + features[i];
       li.classList.add(classString);
       domUl.appendChild(li);
     }
@@ -62,9 +63,9 @@
   }
 
   function closePopup() {
-    if (currentPopup !== null && currentPopup !== undefined) {
+    if (currentPopup) {
       currentPopup.remove();
-      currentPopup = undefined;
+      currentPopup = null;
     }
   }
 

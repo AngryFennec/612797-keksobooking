@@ -5,7 +5,7 @@
   var PIN_HEIGHT = 70;
 
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
-  var domPinsArray = null;
+  var domPins = [];
   var pinsContainer = null;
   var pinList = null;
 
@@ -19,40 +19,35 @@
     return domPin;
   }
 
-  function createDOMPinsArray(advertsArray) {
+  function createDOMPinsArray(adverts) {
     clearMap();
-    var newArray = [];
-    for (var i = 0; i < advertsArray.length; i++) {
-      newArray.push(createDOMPin(advertsArray[i]));
+    for (var i = 0; i < adverts.length; i++) {
+      domPins.push(createDOMPin(adverts[i]));
     }
-    domPinsArray = newArray;
-    return newArray;
   }
 
-  function createDOMPinsList(domPins) {
+  function createDOMPinsList(domArrayPins) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < domPins.length; i++) {
-      fragment.appendChild(domPins[i]);
+    for (var i = 0; i < domArrayPins.length; i++) {
+      fragment.appendChild(domArrayPins[i]);
     }
     return fragment;
   }
 
-  function getDomPinsArray() {
-    return domPinsArray;
+  function getDomPins() {
+    return domPins;
   }
 
   function showPinsOnMap() {
-    pinList = createDOMPinsList(domPinsArray);
+    pinList = createDOMPinsList(domPins);
     pinsContainer.appendChild(pinList);
   }
 
   function clearMap() {
-    if (domPinsArray !== null) {
-      while (domPinsArray.length > 0) {
-        domPinsArray[0].remove();
-        domPinsArray.shift();
-      }
-    }
+    domPins.forEach(function (element) {
+      element.remove();
+    });
+    domPins = [];
   }
 
 
@@ -62,7 +57,7 @@
 
   window.pins = {
     show: showPinsOnMap,
-    getDOMPins: getDomPinsArray,
+    getDOMPins: getDomPins,
     clear: clearMap,
     setContainer: setContainer,
     create: createDOMPinsArray
