@@ -77,20 +77,18 @@
     validateCapacity();
   }
 
-
-  var fieldsetNodeList = Array.from(adForm.querySelectorAll('fieldset'));
-
+  var fieldsetNodes = Array.from(adForm.querySelectorAll('fieldset'));
 
   function setFormDisabled() {
     adForm.classList.add('ad-form--disabled');
-    fieldsetNodeList.forEach(function (element) {
+    fieldsetNodes.forEach(function (element) {
       element.disabled = true;
     });
   }
 
   function setFormEnabled() {
     adForm.classList.remove('ad-form--disabled');
-    fieldsetNodeList.forEach(function (element) {
+    fieldsetNodes.forEach(function (element) {
       element.removeAttribute('disabled');
     });
   }

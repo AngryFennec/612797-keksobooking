@@ -13,8 +13,8 @@
     var file = inputFile.files[0];
     var fileName = file.name.toLowerCase();
 
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
+    var matches = FILE_TYPES.some(function (element) {
+      return fileName.endsWith(element);
     });
 
     if (matches) {

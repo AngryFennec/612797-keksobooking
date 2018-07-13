@@ -8,17 +8,17 @@
   var featuresFieldset = filterForm.querySelector('#housing-features');
   var features = featuresFieldset.querySelectorAll('.map__checkbox');
   var changeCallback = null;
-  var dataGlobal = null;
+  var globalDataValues = null;
   var onFilterFormChange;
 
   function getCheckedFeatures() {
-    var newArray = [];
+    var checkedValues = [];
     Array.from(features).forEach(function (element) {
       if (element.checked) {
-        newArray.push(element.value);
+        checkedValues.push(element.value);
       }
     });
-    return newArray;
+    return checkedValues;
   }
 
   function checkType(element) {
@@ -52,11 +52,11 @@
     return guests.value === 'any' ? true : parseInt(element.offer.guests, 10) === parseInt(guests.value, 10);
   }
 
-  function isNested(arr1, arr2) {
-    var marked = arr1.filter(function (it) {
-      return arr2.indexOf(it) !== -1;
+  function isNested(inners, outers) {
+    var markedValues = inners.filter(function (element) {
+      return outers.indexOf(element) !== -1;
     });
-    return marked.length === arr1.length;
+    return markedValues.length === inners.length;
   }
 
   function checkFeatures(element) {
@@ -64,19 +64,19 @@
   }
 
   function getFilterState() {
-    var filteredData = dataGlobal.filter(function (it) {
-      return checkType(it) && checkPrice(it) && checkRooms(it) && checkGuests(it) && checkFeatures(it);
+    var filteredDataValues = globalDataValues.filter(function (element) {
+      return checkType(element) && checkPrice(element) && checkRooms(element) && checkGuests(element) && checkFeatures(element);
     });
-    changeCallback(filteredData);
+    changeCallback(filteredDataValues);
   }
 
   function setDebounce(callback) {
     onFilterFormChange = callback(getFilterState);
   }
 
-  function setFilters(data, callback) {
+  function setFilters(dataValues, callback) {
     changeCallback = callback;
-    dataGlobal = data;
+    globalDataValues = dataValues;
     onFilterFormChange();
     filterForm.addEventListener('change', onFilterFormChange);
   }
