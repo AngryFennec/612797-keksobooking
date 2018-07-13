@@ -156,7 +156,7 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  function showChangedPins(response) {
+  function showPins(response) {
     window.pins.create(response);
     window.pins.show();
     setPinClickHandlers(response);
@@ -164,9 +164,9 @@
 
   function onDataLoad(response) {
     window.map.getMainPin().removeEventListener('mouseup', mapPinMouseUpHandler);
-    window.filter.setDebounce(window.debounce);
-    window.filter.set(response, showChangedPins);
-    showChangedPins(response);
+    window.filter.set(response, window.debounce(showPins));
+    var filteredData = window.filter.get(response);
+    showPins(filteredData);
   }
 
   window.card.setContainer(document.querySelector('.map'));

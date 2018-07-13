@@ -7,9 +7,6 @@
   var guests = filterForm.querySelector('#housing-guests');
   var featuresFieldset = filterForm.querySelector('#housing-features');
   var features = featuresFieldset.querySelectorAll('.map__checkbox');
-  var changeCallback = null;
-  var globalDataValues = null;
-  var onFilterFormChange;
 
   function getCheckedFeatures() {
     var checkedValues = [];
@@ -63,27 +60,23 @@
     return getCheckedFeatures().length === 0 ? true : isNested(getCheckedFeatures(), element.offer.features);
   }
 
-  function getFilterState() {
-    var filteredDataValues = globalDataValues.filter(function (element) {
+  function getFilterState(dataValues) {
+    var filteredData = dataValues.filter(function (element) {
       return checkType(element) && checkPrice(element) && checkRooms(element) && checkGuests(element) && checkFeatures(element);
     });
-    changeCallback(filteredDataValues.length > 5 ? filteredDataValues.slice(0, 5) : filteredDataValues);
-  }
-
-  function setDebounce(callback) {
-    onFilterFormChange = callback(getFilterState);
+    return filteredData.length > 5 ? filteredData.slice(0, 5) : filteredData;
   }
 
   function setFilters(dataValues, callback) {
-    changeCallback = callback;
-    globalDataValues = dataValues;
-    onFilterFormChange();
-    filterForm.addEventListener('change', onFilterFormChange);
+    filterForm.addEventListener('change', function () {
+      var filteredData = getFilterState(dataValues);
+      callback(filteredData);
+    });
   }
 
   window.filter = {
     set: setFilters,
-    setDebounce: setDebounce
+    get: getFilterState
   };
 
 })();
