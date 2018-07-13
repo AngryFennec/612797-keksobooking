@@ -67,7 +67,7 @@
     var filteredDataValues = globalDataValues.filter(function (element) {
       return checkType(element) && checkPrice(element) && checkRooms(element) && checkGuests(element) && checkFeatures(element);
     });
-    changeCallback(filteredDataValues);
+    changeCallback(filteredDataValues.length > 5 ? filteredDataValues.slice(0, 5) : filteredDataValues);
   }
 
   function setDebounce(callback) {

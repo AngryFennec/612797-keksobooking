@@ -166,6 +166,7 @@
     window.map.getMainPin().removeEventListener('mouseup', mapPinMouseUpHandler);
     window.filter.setDebounce(window.debounce);
     window.filter.set(response, showChangedPins);
+    showChangedPins(response);
   }
 
   window.card.setContainer(document.querySelector('.map'));
