@@ -10,13 +10,13 @@
     initPage();
   }
 
-  function onResetClickHandler(event) {
+  function onResetClick(event) {
     event.preventDefault();
     window.form.getForm().reset();
     clearPage();
   }
 
-  function onSubmitBtnClickHandler(event) {
+  function onSubmitBtnClick(event) {
     window.backend.send(new FormData(window.form.getForm()), function () {
       window.form.disable();
       window.form.getForm().reset();
@@ -43,8 +43,8 @@
   }
 
   function setPopupCloseHandler(currentPopup) {
-    currentPopup.querySelector('.popup__close').addEventListener('click', onCloseBtnPressHandler);
-    document.addEventListener('keydown', onKeyEscPressHandler);
+    currentPopup.querySelector('.popup__close').addEventListener('click', onCloseBtnPress);
+    document.addEventListener('keydown', onKeyEscPress);
   }
 
   function setPinClickHandler(advert) {
@@ -63,15 +63,15 @@
   }
 
 
-  function onCloseBtnPressHandler() {
+  function onCloseBtnPress() {
     window.card.close();
-    document.removeEventListener('keydown', onKeyEscPressHandler);
+    document.removeEventListener('keydown', onKeyEscPress);
   }
 
-  function onKeyEscPressHandler(event) {
+  function onKeyEscPress(event) {
     if (event.keyCode === 27) {
       window.card.close();
-      document.removeEventListener('keydown', onKeyEscPressHandler);
+      document.removeEventListener('keydown', onKeyEscPress);
     }
   }
 
@@ -134,6 +134,6 @@
   window.card.setContainer(document.querySelector('.map'));
   window.pins.setContainer(document.querySelector('.map__pins'));
   initPage();
-  window.form.setListenerToSubmitBtn(onSubmitBtnClickHandler);
-  window.form.setListenerToResetBtn(onResetClickHandler);
+  window.form.setListenerToSubmitBtn(onSubmitBtnClick);
+  window.form.setListenerToResetBtn(onResetClick);
 })();
