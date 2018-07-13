@@ -1,24 +1,7 @@
 'use strict';
 (function () {
-  var Limit = {
-    TOP: 130,
-    BOTTOM: 630
-  };
-
-  var Pin = {
-    HEIGHT: 65,
-    WIDTH: 65,
-    TAIL: 22,
-  };
 
   var mainPin = window.map.getMainPin();
-  var mapPinParent = mainPin.offsetParent;
-  var limits = {
-    top: Limit.TOP - Pin.HEIGHT - Pin.TAIL,
-    bottom: Limit.BOTTOM - Pin.HEIGHT - Pin.TAIL,
-    left: mapPinParent.offsetLeft - Pin.WIDTH / 2,
-    right: mapPinParent.offsetWidth - Pin.WIDTH / 2
-  };
 
   function clearPage() {
     window.card.close();
@@ -119,29 +102,8 @@
         y: moveEvt.clientY
       };
 
-      function calculateNewCoords() {
-        var newCoords = {
-          x: mainPin.offsetLeft - shift.x,
-          y: mainPin.offsetTop - shift.y
-        };
-        if (mainPin.offsetLeft - shift.x > limits.right) {
-          newCoords.x = limits.right;
-        }
-        if (mainPin.offsetLeft - shift.x < limits.left) {
-          newCoords.x = limits.left;
-        }
-        if (mainPin.offsetTop - shift.y > limits.bottom) {
-          newCoords.y = limits.bottom;
-        }
-        if (mainPin.offsetTop - shift.y < limits.top) {
-          newCoords.y = limits.top;
-        }
-        return newCoords;
-      }
-
-      var newMapPinCoords = calculateNewCoords();
-      mainPin.style.left = newMapPinCoords.x + 'px';
-      mainPin.style.top = newMapPinCoords.y + 'px';
+      var newMapPinCoords = window.map.calculateNewCoords(shift);
+      window.map.setNewCoords(newMapPinCoords);
     };
 
     var onMouseUp = function (upEvt) {
