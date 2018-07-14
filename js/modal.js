@@ -2,6 +2,7 @@
 (function () {
   var modalElement = document.createElement('div');
   var alertElement = document.createElement('div');
+
   function createModal(text) {
     modalElement.className = 'modal hidden';
     modalElement.textContent = 'bad';

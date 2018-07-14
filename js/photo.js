@@ -10,7 +10,6 @@
   var previewImage = photoContainer.querySelector('.ad-form__photo');
   var avatarDropZone = document.querySelector('.ad-form-header__drop-zone');
   var photoDropZone = document.querySelector('.ad-form__drop-zone');
-
   var defaultAvatar = preview.src;
 
   function showPhoto(inputFile, callback) {
@@ -48,10 +47,23 @@
   }
 
   function resetPhoto() {
-    photoContainer.innerHTML = ('');
+    var photos = Array.from(document.querySelectorAll('.ad-form__photo-image'));
+    if (photos) {
+      photos.forEach(function (photo) {
+        photo.remove();
+      });
+    }
+    var photoDivs = Array.from(document.querySelectorAll('.ad-form__photo'));
+    if (photoDivs) {
+      photoDivs.forEach(function (photoDiv) {
+        photoDiv.remove();
+      });
+    }
+    previewImage = document.createElement('div');
+    previewImage.classList.add('ad-form__photo');
+    photoContainer.appendChild(previewImage);
     preview.src = defaultAvatar;
   }
-
 
   function createNewPhoto(link) {
     var div = document.createElement('div');
@@ -59,6 +71,11 @@
     div.draggable = true;
     var img = createNewImg(link);
     div.appendChild(img);
+    if (!previewImage) {
+      previewImage = document.createElement('div');
+      previewImage.classList.add('ad-form__photo');
+      photoContainer.appendChild(previewImage);
+    }
     photoContainer.insertBefore(div, previewImage);
   }
 
@@ -106,33 +123,30 @@
 
   // перетаскивание
 
-  var isPhotoMoved = function (element) {
+  function isPhotoMoved(element) {
     var rect = element.getBoundingClientRect();
     return (element.clientX - rect.left) / (rect.right - rect.left) > 0.5;
-  };
+  }
 
   var moveElement;
 
-  var dragOverHandler = function (evt) {
+  function dragOverHandler(evt) {
     evt.preventDefault();
     var target = evt.target;
     var element = target.closest('.ad-form__photo');
     if (element) {
       photoContainer.insertBefore(moveElement, isPhotoMoved(element) && element.nextSibling || element);
     }
-  };
+  }
 
-  var dragEndHandler = function (evt) {
+  function dragEndHandler(evt) {
     evt.preventDefault();
     photoContainer.removeEventListener('dragover', dragOverHandler);
     photoContainer.removeEventListener('dragend', dragEndHandler);
-  };
+  }
 
-  var dragStartHandler = function (evt) {
+  function dragStartHandler(evt) {
     var target = evt.target;
-    /*
-    if (target.classList.contains('ad-form__photo') || target.parentNode.classList.contains('ad-form__photo')) {
-    */
     var element = target.closest('.ad-form__photo');
     if (element) {
       moveElement = element;
@@ -140,10 +154,9 @@
       photoContainer.addEventListener('dragover', dragOverHandler);
       photoContainer.addEventListener('dragend', dragEndHandler);
     }
-  };
+  }
 
   photoContainer.addEventListener('dragstart', dragStartHandler);
-
 
   window.photo = {
     resetPhoto: resetPhoto

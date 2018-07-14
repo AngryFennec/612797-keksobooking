@@ -1,5 +1,19 @@
 'use strict';
 (function () {
+  var Price = {
+    LOW_MAX: 1000,
+    MIDDLE_MAX: 5000
+  };
+
+  var PriceValue = {
+    LOW: 'low',
+    MIDDLE: 'middle',
+    HIGH: 'high'
+  };
+
+  var ANY_VALUE = 'any';
+  var PINS_NUMBER = 5;
+
   var filterForm = document.querySelector('.map__filters');
   var type = filterForm.querySelector('#housing-type');
   var price = filterForm.querySelector('#housing-price');
@@ -19,34 +33,34 @@
   }
 
   function checkType(element) {
-    return type.value === 'any' ? true : element.offer.type === type.value;
+    return type.value === ANY_VALUE ? true : element.offer.type === type.value;
   }
 
   function checkPriceRange(range, priceValue) {
     switch (range) {
-      case ('middle'): {
-        return (priceValue >= 1000 && priceValue <= 5000);
+      case (PriceValue.MIDDLE): {
+        return (priceValue >= Price.LOW_MAX && priceValue <= Price.MIDDLE_MAX);
       }
-      case ('low'): {
-        return (priceValue < 1000);
+      case (PriceValue.LOW): {
+        return (priceValue < Price.LOW_MAX);
       }
-      case ('high'): {
-        return (priceValue > 5000);
+      case (PriceValue.HIGH): {
+        return (priceValue > Price.MIDDLE_MAX);
       }
     }
     return false;
   }
 
   function checkPrice(element) {
-    return price.value === 'any' ? true : checkPriceRange(price.value, element.offer.price);
+    return price.value === ANY_VALUE ? true : checkPriceRange(price.value, element.offer.price);
   }
 
   function checkRooms(element) {
-    return rooms.value === 'any' ? true : parseInt(element.offer.rooms, 10) === parseInt(rooms.value, 10);
+    return rooms.value === ANY_VALUE ? true : parseInt(element.offer.rooms, 10) === parseInt(rooms.value, 10);
   }
 
   function checkGuests(element) {
-    return guests.value === 'any' ? true : parseInt(element.offer.guests, 10) === parseInt(guests.value, 10);
+    return guests.value === ANY_VALUE ? true : parseInt(element.offer.guests, 10) === parseInt(guests.value, 10);
   }
 
   function isNested(inners, outers) {
@@ -64,7 +78,7 @@
     var filteredData = dataValues.filter(function (element) {
       return checkType(element) && checkPrice(element) && checkRooms(element) && checkGuests(element) && checkFeatures(element);
     });
-    return filteredData.length > 5 ? filteredData.slice(0, 5) : filteredData;
+    return filteredData.length > PINS_NUMBER ? filteredData.slice(0, PINS_NUMBER) : filteredData;
   }
 
   function setFilters(dataValues, callback) {

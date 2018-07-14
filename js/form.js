@@ -21,20 +21,19 @@
     return Price[type.toUpperCase()];
   }
 
-  function onTypeSelectChangeHandler() {
+  function onTypeSelectChange() {
     var minPrice = getMinPriceByType(typeSelect.value);
     priceInput.setAttribute('min', minPrice);
     priceInput.setAttribute('placeholder', minPrice);
   }
 
-  function onCheckInSelectChangeHandler() {
+  function onCheckInSelectChange() {
     checkOutSelect.value = checkInSelect.value;
   }
 
-  function onCheckOutSelectChangeHandler() {
+  function onCheckOutSelectChange() {
     checkInSelect.value = checkOutSelect.value;
   }
-
 
   function setAddressFromPin(addressString) {
     addressField.value = addressString;
@@ -73,7 +72,7 @@
     capacitySelect.setCustomValidity(message);
   }
 
-  function onCapacitySelectChangeHandler() {
+  function onCapacitySelectChange() {
     validateCapacity();
   }
 
@@ -98,10 +97,10 @@
   }
 
   validateCapacity();
-  typeSelect.addEventListener('change', onTypeSelectChangeHandler);
-  checkInSelect.addEventListener('change', onCheckInSelectChangeHandler);
-  checkOutSelect.addEventListener('change', onCheckOutSelectChangeHandler);
-  capacitySelect.addEventListener('change', onCapacitySelectChangeHandler);
+  typeSelect.addEventListener('change', onTypeSelectChange);
+  checkInSelect.addEventListener('change', onCheckInSelectChange);
+  checkOutSelect.addEventListener('change', onCheckOutSelectChange);
+  capacitySelect.addEventListener('change', onCapacitySelectChange);
   roomsSelect.addEventListener('change', function () {
     selectedRooms = parseInt(roomsSelect.value, 10);
     validateCapacity();

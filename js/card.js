@@ -8,6 +8,7 @@
     HOUSE: 'Дом',
     BUNGALO: 'Бунгало'
   };
+
   var advertTemplate = document.querySelector('template').content.querySelector('.map__card');
   var currentPopup = null;
   var popupContainer = null;
