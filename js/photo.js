@@ -11,6 +11,7 @@
   var avatarDropZone = document.querySelector('.ad-form-header__drop-zone');
   var photoDropZone = document.querySelector('.ad-form__drop-zone');
   var defaultAvatar = preview.src;
+  var photos = [];
 
   function showPhoto(inputFile, callback) {
     var file = inputFile.files[0];
@@ -47,21 +48,12 @@
   }
 
   function resetPhoto() {
-    var photos = Array.from(document.querySelectorAll('.ad-form__photo-image'));
     if (photos) {
       photos.forEach(function (photo) {
         photo.remove();
       });
     }
-    var photoDivs = Array.from(document.querySelectorAll('.ad-form__photo'));
-    if (photoDivs) {
-      photoDivs.forEach(function (photoDiv) {
-        photoDiv.remove();
-      });
-    }
-    previewImage = document.createElement('div');
-    previewImage.classList.add('ad-form__photo');
-    photoContainer.appendChild(previewImage);
+    photos = [];
     preview.src = defaultAvatar;
   }
 
@@ -76,6 +68,7 @@
       previewImage.classList.add('ad-form__photo');
       photoContainer.appendChild(previewImage);
     }
+    photos.push(div);
     photoContainer.insertBefore(div, previewImage);
   }
 
@@ -130,7 +123,7 @@
 
   var moveElement;
 
-  function dragOverHandler(evt) {
+  function onDragOver(evt) {
     evt.preventDefault();
     var target = evt.target;
     var element = target.closest('.ad-form__photo');
@@ -139,24 +132,24 @@
     }
   }
 
-  function dragEndHandler(evt) {
+  function onDragEnd(evt) {
     evt.preventDefault();
-    photoContainer.removeEventListener('dragover', dragOverHandler);
-    photoContainer.removeEventListener('dragend', dragEndHandler);
+    photoContainer.removeEventListener('dragover', onDragOver);
+    photoContainer.removeEventListener('dragend', onDragEnd);
   }
 
-  function dragStartHandler(evt) {
+  function onDragStart(evt) {
     var target = evt.target;
     var element = target.closest('.ad-form__photo');
     if (element) {
       moveElement = element;
       evt.dataTransfer.setData('text/html', moveElement.textContent);
-      photoContainer.addEventListener('dragover', dragOverHandler);
-      photoContainer.addEventListener('dragend', dragEndHandler);
+      photoContainer.addEventListener('dragover', onDragOver);
+      photoContainer.addEventListener('dragend', onDragEnd);
     }
   }
 
-  photoContainer.addEventListener('dragstart', dragStartHandler);
+  photoContainer.addEventListener('dragstart', onDragStart);
 
   window.photo = {
     resetPhoto: resetPhoto

@@ -1,5 +1,8 @@
 'use strict';
 (function () {
+  var ANY_VALUE = 'any';
+  var PINS_NUMBER = 5;
+
   var Price = {
     LOW_MAX: 1000,
     MIDDLE_MAX: 5000
@@ -10,9 +13,6 @@
     MIDDLE: 'middle',
     HIGH: 'high'
   };
-
-  var ANY_VALUE = 'any';
-  var PINS_NUMBER = 5;
 
   var filterForm = document.querySelector('.map__filters');
   var type = filterForm.querySelector('#housing-type');
